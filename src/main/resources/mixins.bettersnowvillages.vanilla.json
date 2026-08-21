@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "bettersnowvillages.mixin",
+  "refmap": "mixins.bettersnowvillages.refmap.json",
+  "compatibilityLevel": "JAVA_8",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8",
+  "mixins": [
+    "vanilla.EntityPlayerMixin"
+  ],
+  "injectors": {
+    "maxShiftBy": 10
+  }
+}

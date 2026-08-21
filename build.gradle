@@ -48,10 +48,16 @@ minecraft {
 repositories {
     flatDir { dirs 'libs' }
     maven { url = 'https://www.cursemaven.com' }
+//    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // Note to self
+    // Old Solution to runClient crash https://github.com/RedServer/ForgeSideFix/blob/main/ReadMe.md
+//    runtimeOnly  'com.github.RedServer:ForgeSideFix:1.12.2-1.0'
+    // Current solution is is gradle download sources
 
     compileOnly "org.spongepowered:mixin:${mixin_version}"
     annotationProcessor "org.spongepowered:mixin:${mixin_version}:processor"
@@ -59,8 +65,16 @@ dependencies {
     annotationProcessor "io.github.llamalad7:mixinextras-common:${mixin_extras_version}"
 
     implementation fg.deobf("curse.maven:fermiumbooter-${fermiumbooter_version}")
-	
-    implementation fg.deobf("curse.maven:jei-${jei_version}")
+
+    implementation fg.deobf("curse.maven:llibrary-${llibrary_version}")
+    implementation fg.deobf("curse.maven:iceandfire-rlcraft-${iceandfirerlc_version}")
+    compileOnly fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
+    compileOnly fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
+
+    compileOnly fg.deobf("curse.maven:waystones-${waystones_version}")
+
+    implementation fg.deobf("curse.maven:shadowfacts-forgelin-${forgelin_version}")
+    implementation fg.deobf("curse.maven:bountiful-${bountiful_version}")
 }
 
 mixin {
