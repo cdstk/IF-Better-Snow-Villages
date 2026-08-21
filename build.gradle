@@ -66,15 +66,18 @@ dependencies {
 
     implementation fg.deobf("curse.maven:fermiumbooter-${fermiumbooter_version}")
 
-    implementation fg.deobf("curse.maven:llibrary-${llibrary_version}")
+    runtimeOnly fg.deobf("curse.maven:llibrary-${llibrary_version}")
     implementation fg.deobf("curse.maven:iceandfire-rlcraft-${iceandfirerlc_version}")
-    compileOnly fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
-    compileOnly fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
+//    compileOnly fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
+//    compileOnly fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
 
     compileOnly fg.deobf("curse.maven:waystones-${waystones_version}")
 
-    implementation fg.deobf("curse.maven:shadowfacts-forgelin-${forgelin_version}")
+    runtimeOnly fg.deobf("curse.maven:shadowfacts-forgelin-${forgelin_version}")
     implementation fg.deobf("curse.maven:bountiful-${bountiful_version}")
+
+    runtimeOnly fg.deobf("curse.maven:ivtoolkit-${ivtoolkit_version}")
+    implementation fg.deobf("curse.maven:recurrent-complex-${recurrentcomplex_version}")
 }
 
 mixin {

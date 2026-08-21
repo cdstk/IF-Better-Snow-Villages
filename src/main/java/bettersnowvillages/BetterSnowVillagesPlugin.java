@@ -1,8 +1,10 @@
 package bettersnowvillages;
 
-import java.util.Map;
-import org.spongepowered.asm.launch.MixinBootstrap;
+import fermiumbooter.FermiumRegistryAPI;
 import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import org.spongepowered.asm.launch.MixinBootstrap;
+
+import java.util.Map;
 
 @IFMLLoadingPlugin.MCVersion("1.12.2")
 public class BetterSnowVillagesPlugin implements IFMLLoadingPlugin {
@@ -16,6 +18,10 @@ public class BetterSnowVillagesPlugin implements IFMLLoadingPlugin {
 
 		//FermiumRegistryAPI.enqueueMixin(true, "mixins.bettersnowvillages.jei.json", () -> Loader.isModLoaded("jei"));
 		//--> Replaced by @MixinConfig.MixinToggle in ForgeConfigHandler. This way is still an option for more complicated conditions
+
+		FermiumRegistryAPI.enqueueMixin(false, "mixins.bettersnowvillages.vanilla.json");
+		FermiumRegistryAPI.enqueueMixin(true, "mixins.bettersnowvillages.iceandfire.json");
+//		FermiumRegistryAPI.enqueueMixin(true, "mixins.bettersnowvillages.recurrentcomplex.json", () -> FermiumRegistryAPI.isModPresent(ModLoadedUtil.RECURRENTCOMPLEX_MODID));
 	}
 
 	@Override

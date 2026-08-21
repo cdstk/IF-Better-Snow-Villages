@@ -1,5 +1,6 @@
 package bettersnowvillages.mixin.vanilla;
 
+import bettersnowvillages.BetterSnowVillages;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import org.apache.logging.log4j.Level;
@@ -7,7 +8,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import bettersnowvillages.BetterSnowVillages;
 
 @Mixin(EntityPlayer.class)
 public abstract class EntityPlayerMixin {

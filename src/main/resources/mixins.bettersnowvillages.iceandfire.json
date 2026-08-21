@@ -6,7 +6,7 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
-    "vanilla.StructureVillagePieces_SnowVillageComponentMixinMixin"
+    "iceandfire.IafVillagerRegistry_ForgeAPIMixin"
   ],
   "injectors": {
     "maxShiftBy": 10

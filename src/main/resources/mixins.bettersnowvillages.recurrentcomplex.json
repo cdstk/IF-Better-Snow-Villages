@@ -6,7 +6,8 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
-    "vanilla.StructureVillagePieces_SnowVillageComponentMixinMixin"
+    "recurrentcomplex.TemporaryVillagerRegistry_DynamicComponentsMixin",
+    "recurrentcomplex.VanillaGenerationClassFactory_LateVillageMixin"
   ],
   "injectors": {
     "maxShiftBy": 10
