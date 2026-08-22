@@ -2,8 +2,16 @@ package bettersnowvillages.compat;
 
 import bettersnowvillages.handlers.ForgeConfigHandler;
 import com.github.alexthe666.iceandfire.IceAndFireConfig;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.world.World;
 
 public class IceAndFireForksUtil {
+
+    // Was going to make it a dread mob but that still laggy af
+    public static EntityLiving getInfestedSnowVillageMob(World world) {
+        return new EntityZombieVillager(world);
+    }
 
     public static boolean getSnowVillageGenConfig(boolean useVanillaIF) {
         if(useVanillaIF) {

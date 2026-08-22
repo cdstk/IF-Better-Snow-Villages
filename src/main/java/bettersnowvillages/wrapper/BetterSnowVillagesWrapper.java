@@ -1,6 +1,6 @@
 package bettersnowvillages.wrapper;
 
-import com.github.alexthe666.iceandfire.entity.EntityDreadGhoul;
+import bettersnowvillages.compat.IceAndFireForksUtil;
 import com.github.alexthe666.iceandfire.entity.EntitySnowVillager;
 import com.github.alexthe666.iceandfire.entity.IafVillagerRegistry;
 import net.minecraft.entity.EntityLiving;
@@ -12,7 +12,7 @@ import java.util.Random;
 public class BetterSnowVillagesWrapper {
 
     public static EntityLiving newInfestedMobInstance(World world) {
-        return new EntityDreadGhoul(world);
+        return IceAndFireForksUtil.getInfestedSnowVillageMob(world);
     }
 
     public static EntityVillager newSnowVillagerInstance(World world) {

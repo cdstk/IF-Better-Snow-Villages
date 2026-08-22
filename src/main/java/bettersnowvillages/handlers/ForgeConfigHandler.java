@@ -47,13 +47,36 @@ public class ForgeConfigHandler {
 		@Config.Comment("How far apart snow villages should spawn apart from each other")
 		@Config.Name("Better Snow Village Minimum Distance")
 		@Config.RangeInt(min = 0)
-		public int betterSVMinDist = 0;
+		public int betterSVMinDist = 300;
+
+		@Config.Comment("Modifies Bountiful mod's Bounty Board to generate snow and ice variations in cold and snowy tagged biomes.")
+		@Config.Name("Mixin: Snowy Bounty Board (Bountiful)")
+		@MixinConfig.MixinToggle(lateMixin = "mixins.bettersnowvillages.bountiful.json", defaultValue = true)
+		@MixinConfig.CompatHandling(
+				modid = ModLoadedUtil.BOUNTIFUL_MODID,
+				desired = true,
+				reason = "Mod needed for this Mixin to properly work",
+				warnIngame = false
+		)
+		@Config.RequiresMcRestart
+		public boolean genBetterBoard = true;
+
+		@Config.Comment("Modifies Village Waystones to generate snow and ice variations in cold and snowy tagged biomes.")
+		@Config.Name("Mixin: Snowy Waystone (Waystones)")
+		@MixinConfig.MixinToggle(lateMixin = "mixins.bettersnowvillages.waystones.json", defaultValue = true)
+		@MixinConfig.CompatHandling(
+				modid = ModLoadedUtil.WAYSTONES_MODID,
+				desired = true,
+				reason = "Mod needed for this Mixin to properly work",
+				warnIngame = false
+		)
+		@Config.RequiresMcRestart
+		public boolean genBetterWaystone = true;
 
 		@Config.Comment({
-				"Modpack development option.",
 				"Recurrent Complex dynamically loads Village Components compared to vanilla Forge registering them on startup.",
-				"This will automatically check RC's custom Class Loader to catch when Components are registered",
-				"Else Recurrent Classes can be manually determined using structureID (file name), generationID (json file id field)"
+				"This will automatically check Recurrent Complex's custom Class Loader to catch when Components are registered.",
+				"Else Recurrent Complex Village structures can not properly be blacklisted in the config."
 		})
 		@Config.Name("Mixin: Recurrent Complex Village Reader (Recurrent Complex)")
 		@MixinConfig.MixinToggle(lateMixin = "mixins.bettersnowvillages.recurrentcomplex.json", defaultValue = true)
@@ -68,7 +91,9 @@ public class ForgeConfigHandler {
 
 		@Config.Comment({
 				"Modpack development option.",
-				"Forces Recurrent Complex's Village Component cache to not be cleared."
+				"Forces Recurrent Complex's Village Component cache to not be cleared.",
+				"Intended to help automatically populate the configurable snow village component blacklist",
+				"Else Recurrent Classes can be manually determined using structureID (file name), generationID (json file id field)"
 		})
 		@Config.Name("Recurrent Complex Village Reader - Force Hold Cache")
 		public boolean recurrentVillageForceCache = false;
@@ -83,7 +108,8 @@ public class ForgeConfigHandler {
 		@Config.Comment({
 				"List of Village Components registered to Forge.",
 				"Components can be blacklisted from generating in Better Snow Villages if set to 'false'",
-				"This list can be automatically refreshed with loaded components if the 1st entry is blank."
+				"This list can be automatically refreshed with loaded components if the 1st entry is blank.",
+				"Recurrent Classes can be manually determined using structureID (file name), generationID (json file id field)"
 		})
 		@Config.Name("Better Snow Village Vanilla Components")
 		public String[] snowVillageComponents = {
@@ -109,12 +135,15 @@ public class ForgeConfigHandler {
 		};
 	}
 
-	@MixinConfig(name = BetterSnowVillages.MODID)
 	public static class BaseSnowVillageGenConfig {
 
-		@Config.Comment("Example client side config option")
-		@Config.Name("Example Client Option")
-		public boolean exampleClientOption = true;
+		@Config.Comment("Adds Bountiful mod's Bounty Board to the vanilla Ice and Fire Snow Villages.")
+		@Config.Name("Mod Compat: Bountiful Bounty Board")
+		public boolean baseGenBountyBoard = true;
+
+		@Config.Comment("Adds Waystones to the vanilla Ice and Fire Snow Villages, requires Waystones mod.")
+		@Config.Name("Mod Compat: Waystone")
+		public boolean baseGenWaystone = true;
 	}
 
 	@Mod.EventBusSubscriber(modid = BetterSnowVillages.MODID)

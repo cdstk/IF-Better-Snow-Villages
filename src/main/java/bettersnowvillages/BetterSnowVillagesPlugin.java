@@ -21,7 +21,6 @@ public class BetterSnowVillagesPlugin implements IFMLLoadingPlugin {
 
 		FermiumRegistryAPI.enqueueMixin(false, "mixins.bettersnowvillages.vanilla.json");
 		FermiumRegistryAPI.enqueueMixin(true, "mixins.bettersnowvillages.iceandfire.json");
-//		FermiumRegistryAPI.enqueueMixin(true, "mixins.bettersnowvillages.recurrentcomplex.json", () -> FermiumRegistryAPI.isModPresent(ModLoadedUtil.RECURRENTCOMPLEX_MODID));
 	}
 
 	@Override

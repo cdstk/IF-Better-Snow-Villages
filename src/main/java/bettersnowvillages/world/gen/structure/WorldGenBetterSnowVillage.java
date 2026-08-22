@@ -70,10 +70,7 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
         double spawnCheck = IceAndFireForksUtil.getSnowVillageMinimumDistance(ForgeConfigHandler.betterSVGen.useIFConfig)
                 * IceAndFireForksUtil.getSnowVillageMinimumDistance(ForgeConfigHandler.betterSVGen.useIFConfig);
 
-        boolean isCold = types.contains(BiomeDictionary.Type.COLD);
-        boolean isSnowy = types.contains(BiomeDictionary.Type.SNOWY);
-
-        if (isCold && isSnowy) {
+        if (types.contains(BiomeDictionary.Type.COLD) && types.contains(BiomeDictionary.Type.SNOWY)) {
             BlockPos lastPos = getLastPosition();
             if(lastPos == null || lastPos.distanceSq(position) >= spawnCheck) {
                 return true;
