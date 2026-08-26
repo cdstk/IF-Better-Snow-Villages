@@ -6,8 +6,7 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
-    "recurrentcomplex.TemporaryVillagerRegistry_DynamicComponentsMixin",
-    "recurrentcomplex.VanillaGenerationClassFactory_LateVillageMixin"
+    "iceandfire.IafVillagerRegistry_TradesMixin"
   ],
   "injectors": {
     "maxShiftBy": 10

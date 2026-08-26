@@ -1,12 +1,18 @@
 package bettersnowvillages.compat;
 
-import bettersnowvillages.handlers.ForgeConfigHandler;
+import bettersnowvillages.config.ForgeConfigHandler;
 import com.github.alexthe666.iceandfire.IceAndFireConfig;
+import com.github.alexthe666.iceandfire.block.IDreadBlock;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombieVillager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class IceAndFireForksUtil {
+
+    public static boolean isBlockInsideMausoleum(World world, BlockPos pos) {
+        return IDreadBlock.isBlockInsideMausoleum(world, pos);
+    }
 
     // Was going to make it a dread mob but that still laggy af
     public static EntityLiving getInfestedSnowVillageMob(World world) {

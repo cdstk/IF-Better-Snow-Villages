@@ -2,14 +2,14 @@ package bettersnowvillages.mixin.iceandfire;
 
 import bettersnowvillages.compat.BountifulUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
+import bettersnowvillages.compat.WaystonesUtil;
 import bettersnowvillages.compat.bountiful.worldgen.worldgen.ComponentSnowVillageBountyBoard;
 import bettersnowvillages.compat.waystones.worldgen.ComponentSnowVillageWaystone;
-import bettersnowvillages.handlers.ForgeConfigHandler;
+import bettersnowvillages.config.ForgeConfigHandler;
 import com.github.alexthe666.iceandfire.world.village.SnowVillagePieces;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
-import net.blay09.mods.waystones.WaystoneConfig;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.gen.structure.StructureComponent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,7 +42,7 @@ public abstract class SnowVillagePieces_AddonMixin {
             list.add(new SnowVillagePieces.PieceWeight(
                     ComponentSnowVillageWaystone.class,
                     3,
-                    random.nextFloat() > WaystoneConfig.worldGen.villageChance
+                    random.nextFloat() > WaystonesUtil.getVillageWaystoneChance()
                             ? 0
                             : 1
             ));

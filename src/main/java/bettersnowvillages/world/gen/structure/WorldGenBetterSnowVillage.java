@@ -1,7 +1,10 @@
 package bettersnowvillages.world.gen.structure;
 
 import bettersnowvillages.compat.IceAndFireForksUtil;
-import bettersnowvillages.handlers.ForgeConfigHandler;
+import bettersnowvillages.config.ForgeConfigHandler;
+import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -19,6 +22,14 @@ import java.util.Set;
 
 public class WorldGenBetterSnowVillage extends WorldGenerator {
 
+    public static boolean isBiomeTypesValid(Set<BiomeDictionary.Type> types) {
+        return types.contains(BiomeDictionary.Type.COLD) && types.contains(BiomeDictionary.Type.SNOWY);
+    }
+
+    public static boolean isComponentOfSnowVillage(StructureVillagePieces.Start start) {
+        return start instanceof BetterSnowVillagePieces.SnowWell;
+    }
+
     public static boolean isVillageGenAllowedInDim(int id) {
         for (int i : IceAndFireForksUtil.getSnowVillageDimensionsConfig(ForgeConfigHandler.betterSVGen.useIFConfig)) {
             if (i == id) return IceAndFireForksUtil.getSnowVillageDimWhitelistConfig(ForgeConfigHandler.betterSVGen.useIFConfig);
@@ -26,33 +37,42 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
         return !IceAndFireForksUtil.getSnowVillageDimWhitelistConfig(ForgeConfigHandler.betterSVGen.useIFConfig);
     }
 
-    // This should be threadsafe as threads do generate next to each other in IF RLC
-    private BlockPos lastSnowVillage = null;
-
-    public synchronized void updatePosition(BlockPos newPos) {
-        this.lastSnowVillage = newPos;
+    public static IBlockState getBasicSnowyPalletSwap(IBlockState blockState) {
+        if(blockState == Blocks.COBBLESTONE.getDefaultState()) {
+            blockState = IafBlockRegistry.frozenCobblestone.getDefaultState();
+        }
+        else if(blockState == Blocks.PLANKS.getDefaultState()) {
+            blockState = Blocks.SNOW.getDefaultState();
+        }
+        else if(blockState == Blocks.LOG.getDefaultState()) {
+            blockState = Blocks.PACKED_ICE.getDefaultState();
+        }
+        return blockState;
     }
 
-    public synchronized BlockPos getLastPosition() {
-        return this.lastSnowVillage;
-    }
+    private volatile BlockPos lastSnowVillage = null;
 
     public WorldGenBetterSnowVillage() {
 
     }
 
     @Override
-    public boolean generate(World worldIn, Random rand, BlockPos position) {
-        int new_size = 32;
+    public  boolean generate(World worldIn, Random rand, BlockPos position) {
+        double spawnCheck = IceAndFireForksUtil.getSnowVillageMinimumDistance(ForgeConfigHandler.betterSVGen.useIFConfig)
+                * IceAndFireForksUtil.getSnowVillageMinimumDistance(ForgeConfigHandler.betterSVGen.useIFConfig);
+
+        if(this.lastSnowVillage != null && this.lastSnowVillage.distanceSq(position) < spawnCheck) {
+            return false;
+        }
+        this.lastSnowVillage = position;
+
         int chunkX = position.getX() >> 4;
         int chunkZ = position.getZ() >> 4;
-        new WorldGenBetterSnowVillage.Start(worldIn, rand, chunkX, chunkZ, 0)
-                .generateStructure(worldIn, rand,
-                        new StructureBoundingBox(
-                                position.getX() - new_size, position.getZ() - new_size,
-                                position.getX() + new_size, position.getZ() + new_size
-        ));
-        updatePosition(position);
+        StructureStart start = new WorldGenBetterSnowVillage.Start(worldIn, rand, chunkX, chunkZ, 0);
+        StructureBoundingBox boundingBox = start.getBoundingBox();
+        boundingBox.minY = 1;
+        boundingBox.maxY = 512;
+        start.generateStructure(worldIn, rand, boundingBox);
         return true;
     }
 
@@ -67,14 +87,9 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
         Biome biome = worldIn.getBiome(position);
         Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(biome);
 
-        double spawnCheck = IceAndFireForksUtil.getSnowVillageMinimumDistance(ForgeConfigHandler.betterSVGen.useIFConfig)
-                * IceAndFireForksUtil.getSnowVillageMinimumDistance(ForgeConfigHandler.betterSVGen.useIFConfig);
 
-        if (types.contains(BiomeDictionary.Type.COLD) && types.contains(BiomeDictionary.Type.SNOWY)) {
-            BlockPos lastPos = getLastPosition();
-            if(lastPos == null || lastPos.distanceSq(position) >= spawnCheck) {
-                return true;
-            }
+        if (isBiomeTypesValid(types)) {
+            return true;
         }
 
         return false;

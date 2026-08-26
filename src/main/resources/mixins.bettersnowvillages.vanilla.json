@@ -6,6 +6,8 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
+    "vanilla.StructureComponent_AccessorMixin",
+    "vanilla.StructureVillagePieces_NBTComponentMixin",
     "vanilla.StructureVillagePieces_SnowVillageComponentMixinMixin"
   ],
   "injectors": {

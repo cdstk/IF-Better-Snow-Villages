@@ -1,6 +1,6 @@
 package bettersnowvillages;
 
-import bettersnowvillages.handlers.ForgeConfigProvider;
+import bettersnowvillages.config.ForgeConfigProvider;
 import bettersnowvillages.proxy.CommonProxy;
 import bettersnowvillages.world.gen.BetterSnowVillagesStructureGenerator;
 import bettersnowvillages.world.gen.structure.BetterSnowVillagePieces;
@@ -43,7 +43,7 @@ public class BetterSnowVillages {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         BetterSnowVillagePieces.registerVillagePieces();
-        GameRegistry.registerWorldGenerator(new BetterSnowVillagesStructureGenerator(), 0);
+        GameRegistry.registerWorldGenerator(new BetterSnowVillagesStructureGenerator(), 1); // 1 So doesn't break mausoleums
     }
 
     @Mod.EventHandler

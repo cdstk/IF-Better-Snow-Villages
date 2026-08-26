@@ -69,7 +69,10 @@ public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
     public static ComponentSnowVillageBountyBoard createPiece(SnowVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(
                 structureMinX, structureMinY, structureMinZ,
-                0, 0, 0, 3, 3, 3, facing);
+                0, 0, 0,
+                3, 3, 3,
+                facing
+        );
         return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null
                 ? new ComponentSnowVillageBountyBoard(start, type, structureboundingbox, facing)
                 : null;

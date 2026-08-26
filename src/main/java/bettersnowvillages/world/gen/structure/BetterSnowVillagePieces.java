@@ -2,15 +2,21 @@ package bettersnowvillages.world.gen.structure;
 
 import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.compat.ModLoadedUtil;
-import bettersnowvillages.handlers.ForgeConfigProvider;
+import bettersnowvillages.config.ForgeConfigProvider;
 import bettersnowvillages.util.IStructurePiecesVillagePieces_SnowVillageComponentMixin;
-import bettersnowvillages.world.gen.componenthandlers.VillageSnowLimitedTorchCreationHandler;
+import bettersnowvillages.world.gen.componenthandlers.VillageNBTCreationHandler;
+import bettersnowvillages.world.gen.componenthandlers.VillageSnowExtraTorchCreationHandler;
+import bettersnowvillages.world.gen.componenthandlers.VillageSnowHouse3CreationHandler;
+import bettersnowvillages.world.gen.componenthandlers.VillageSnowHouse4CreationHandler;
 import bettersnowvillages.world.gen.componenthandlers.VillageSnowPathCreationHandler;
 import bettersnowvillages.world.gen.componenthandlers.VillageSnowWellCreationHandler;
 import bettersnowvillages.world.gen.componenthandlers.VillageSnowWoodHutCreationHandler;
 import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.google.common.collect.Lists;
 import net.minecraft.block.BlockColored;
+import net.minecraft.block.BlockLog;
+import net.minecraft.block.BlockOldLog;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockStainedGlassPane;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
@@ -23,7 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeProvider;
-import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
@@ -36,21 +41,52 @@ import java.util.Random;
 public class BetterSnowVillagePieces {
 
     public static void registerVillagePieces() {
-        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWell.class, "BSViW");
-        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowPath.class, "BSViSR");
-        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.LimitedTorch.class, "BSViL");
-        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWoodHut.class, "BSViSmH");
+//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWell.class, "BSViW");
+//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowPath.class, "BSViSR");
+//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.ExtraTorch.class, "BSViL");
+//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWoodHut.class, "BSViSmH");
+//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowHouse3.class, "BSViTRH");
+//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowHouse4.class, "BSViSH");
 
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowWellCreationHandler());
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowPathCreationHandler());
-        VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowLimitedTorchCreationHandler());
+        VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowExtraTorchCreationHandler());
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowWoodHutCreationHandler());
+        VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowHouse3CreationHandler());
+        VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowHouse4CreationHandler());
+
+        VillagerRegistry.instance().registerVillageCreationHandler(new VillageNBTCreationHandler()); // Prevent a crash if mixin fails
     }
 
     public static List<StructureVillagePieces.PieceWeight> getStructureVillageWeightedPieceList(Random random, int size) {
         List<StructureVillagePieces.PieceWeight> list = Lists.newArrayList();
-        list.add(new StructureVillagePieces.PieceWeight(LimitedTorch.class, 75, MathHelper.getInt(random, 5 + size, 6 + size)));
-        list.add(new StructureVillagePieces.PieceWeight(SnowWoodHut.class, 65, MathHelper.getInt(random, 3 + size, 5 + size)));
+
+        ForgeConfigProvider.getSVClassGen().forEach((clazz, coreGenInfo) -> {
+            int randomCount;
+            if(coreGenInfo.min < 0) {
+                randomCount = MathHelper.getInt(random, size, coreGenInfo.max + size - coreGenInfo.min);
+                randomCount = MathHelper.clamp(randomCount + coreGenInfo.min, 0, coreGenInfo.max);
+            }
+            else {
+                randomCount = MathHelper.getInt(random, coreGenInfo.min + size, coreGenInfo.max + size);
+            }
+            list.add(new StructureVillagePieces.PieceWeight(clazz, coreGenInfo.weight, randomCount));
+        });
+
+        ForgeConfigProvider.getSVNBTGen().forEach((structureID, nbtGenInfo) -> {
+            int randomCount;
+            if(nbtGenInfo.min < 0) {
+                randomCount = MathHelper.getInt(random, size, nbtGenInfo.max + size - nbtGenInfo.min);
+                randomCount = MathHelper.clamp(randomCount + nbtGenInfo.min, 0, nbtGenInfo.max);
+            }
+            else {
+                randomCount = MathHelper.getInt(random, nbtGenInfo.min + size, nbtGenInfo.max + size);
+            }
+            list.add(new VillageNBTPieceWeight(structureID, nbtGenInfo.weight, randomCount,
+                    nbtGenInfo.bbXMax, nbtGenInfo.bbYMax, nbtGenInfo.bbZMax,
+                    nbtGenInfo.xOffset, nbtGenInfo.yOffset, nbtGenInfo.zOffset)
+            );
+        });
 
         VillagerRegistry.addExtraVillageComponents(list, random, size);
 
@@ -293,167 +329,231 @@ public class BetterSnowVillagePieces {
         }
     }
 
-    public static class LimitedTorch extends StructureVillagePieces.Village {
+    public static class ExtraTorch extends StructureVillagePieces.Torch {
 
-        public static LimitedTorch createPiece(StructureVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
+        public static ExtraTorch createPiece(StructureVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
             StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(
                     structureMinX, structureMinY, structureMinZ,
-                    0, 0, 0, 4, 6, 5, facing);
+                    0, 0, 0,
+                    3, 4, 2,
+                    facing
+            );
             return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null
-                    ? new LimitedTorch(start, type, rand, structureboundingbox, facing)
+                    ? new ExtraTorch(start, type, rand, structureboundingbox, facing)
                     : null;
         }
 
-        public LimitedTorch() {}
+        public ExtraTorch() {}
 
-        public LimitedTorch(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox structurebb, EnumFacing facing)
-        {
-            super(start, type);
-            this.setCoordBaseMode(facing);
-            this.boundingBox = structurebb;
+        public ExtraTorch(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox structurebb, EnumFacing facing) {
+            super(start, type, rand, structurebb, facing);
         }
 
+        @Override
         public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+            boolean result = super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn);
             if (this.averageGroundLvl < 0) {
-                this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
-
-                if (this.averageGroundLvl < 0) {
-                    return true;
-                }
-
-                this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 5, 0);
+                return true;
             }
 
-            IBlockState iblockstate = this.getBiomeSpecificBlockState(Blocks.SPRUCE_FENCE.getDefaultState());
-            this.setBlockState(worldIn, iblockstate, 1, 0, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, iblockstate, 1, 1, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, iblockstate, 1, 2, 0, structureBoundingBoxIn);
+            // Lamp Color
             this.setBlockState(worldIn, Blocks.WOOL.getDefaultState().withProperty(BlockColored.COLOR, EnumDyeColor.BLACK), 1, 3, 0, structureBoundingBoxIn);
-            this.placeTorch(worldIn, EnumFacing.EAST, 2, 3, 0, structureBoundingBoxIn);
-            this.placeTorch(worldIn, EnumFacing.NORTH, 1, 3, 1, structureBoundingBoxIn);
-            this.placeTorch(worldIn, EnumFacing.WEST, 0, 3, 0, structureBoundingBoxIn);
-            this.placeTorch(worldIn, EnumFacing.SOUTH, 1, 3, -1, structureBoundingBoxIn);
-            return true;
+            return result;
         }
     }
 
-    public static class SnowWoodHut extends StructureVillagePieces.Village {
+    public static class SnowWoodHut extends StructureVillagePieces.WoodHut {
 
         public static SnowWoodHut createPiece(StructureVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
             StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(
                     structureMinX, structureMinY, structureMinZ,
-                    0, 0, 0, 4, 6, 5, facing);
+                    0, 0, 0,
+                    4, 6, 5,
+                    facing
+            );
             return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null
                     ? new SnowWoodHut(start, type, rand, structureboundingbox, facing)
                     : null;
         }
 
-        protected boolean isTallHouse;
-        protected int tablePosition;
-
         public SnowWoodHut() {}
 
         public SnowWoodHut(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox structurebb, EnumFacing facing) {
-            super(start, type);
-            this.setCoordBaseMode(facing);
-            this.boundingBox = structurebb;
-            this.isTallHouse = rand.nextBoolean();
-            this.tablePosition = rand.nextInt(3);
+            super(start, type, rand, structurebb, facing);
         }
 
-        protected void writeStructureToNBT(NBTTagCompound tagCompound) {
-            super.writeStructureToNBT(tagCompound);
-            tagCompound.setInteger("T", this.tablePosition);
-            tagCompound.setBoolean("C", this.isTallHouse);
-        }
-
-        protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager templateManager) {
-            super.readStructureFromNBT(tagCompound, templateManager);
-            this.tablePosition = tagCompound.getInteger("T");
-            this.isTallHouse = tagCompound.getBoolean("C");
-        }
-
-        public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
-            if (this.averageGroundLvl < 0) {
-                this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
-
-                if (this.averageGroundLvl < 0) {
-                    return true;
-                }
-
-                this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 6 - 1, 0);
-            }
-
-            IBlockState foundationBlock = this.getBiomeSpecificBlockState(IafBlockRegistry.frozenCobblestone.getDefaultState());
-            IBlockState wallFaceBlock = this.getBiomeSpecificBlockState(Blocks.SNOW.getDefaultState());
-            IBlockState stairBlock = this.getBiomeSpecificBlockState(Blocks.STONE_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH));
-            IBlockState wallCornerBlock = this.getBiomeSpecificBlockState(Blocks.PACKED_ICE.getDefaultState());
-            IBlockState tableStandBlock = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 3, 5, 4, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 0, 0, 3, 0, 4, foundationBlock, foundationBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 2, 0, 3, Blocks.DIRT.getDefaultState(), Blocks.DIRT.getDefaultState(), false);
-
-            if (this.isTallHouse) {
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 4, 1, 2, 4, 3, wallCornerBlock, wallCornerBlock, false);
+        @Override
+        protected void spawnVillagers(World worldIn, StructureBoundingBox structurebb, int x, int y, int z, int count) {
+            if(this instanceof IStructurePiecesVillagePieces_SnowVillageComponentMixin) {
+                ((IStructurePiecesVillagePieces_SnowVillageComponentMixin) this).bettersnowvillages$spawnSnowVillagers(worldIn, boundingBox, x, y, z, count);
             }
             else {
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 5, 1, 2, 5, 3, wallCornerBlock, wallCornerBlock, false);
+                this.spawnVillagers(worldIn, structurebb, x, y, z, count);
+                BetterSnowVillages.LOGGER.warn("Failed to spawn Ice and Fire Snow Villager in custom Structure Component");
+            }
+        }
+
+        @Override
+        protected IBlockState getBiomeSpecificBlockState(IBlockState blockstateIn) {
+            blockstateIn = WorldGenBetterSnowVillage.getBasicSnowyPalletSwap(blockstateIn);
+            return super.getBiomeSpecificBlockState(blockstateIn);
+        }
+
+        @Override
+        public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+            boolean result = super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn);
+            if (this.averageGroundLvl < 0) {
+                return true;
             }
 
-            this.setBlockState(worldIn, wallCornerBlock, 1, 4, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 2, 4, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 1, 4, 4, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 2, 4, 4, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 0, 4, 1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 0, 4, 2, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 0, 4, 3, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 3, 4, 1, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 3, 4, 2, structureBoundingBoxIn);
-            this.setBlockState(worldIn, wallCornerBlock, 3, 4, 3, structureBoundingBoxIn);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 1, 0, 0, 3, 0, wallCornerBlock, wallCornerBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 1, 0, 3, 3, 0, wallCornerBlock, wallCornerBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 1, 4, 0, 3, 4, wallCornerBlock, wallCornerBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 1, 4, 3, 3, 4, wallCornerBlock, wallCornerBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 0, 1, 1, 0, 3, 3, wallFaceBlock, wallFaceBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 3, 1, 1, 3, 3, 3, wallFaceBlock, wallFaceBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 1, 0, 2, 3, 0, wallFaceBlock, wallFaceBlock, false);
-            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 1, 4, 2, 3, 4, wallFaceBlock, wallFaceBlock, false);
+            // Window Color
             this.setBlockState(worldIn, Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockStainedGlassPane.COLOR, EnumDyeColor.LIGHT_BLUE), 0, 2, 2, structureBoundingBoxIn);
             this.setBlockState(worldIn, Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockStainedGlassPane.COLOR, EnumDyeColor.LIGHT_BLUE), 3, 2, 2, structureBoundingBoxIn);
 
-            if (this.tablePosition > 0) {
-                this.setBlockState(worldIn, tableStandBlock, this.tablePosition, 1, 3, structureBoundingBoxIn);
-                this.setBlockState(worldIn, Blocks.WOODEN_PRESSURE_PLATE.getDefaultState(), this.tablePosition, 2, 3, structureBoundingBoxIn);
-            }
-
-            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 1, 0, structureBoundingBoxIn);
-            this.setBlockState(worldIn, Blocks.AIR.getDefaultState(), 1, 2, 0, structureBoundingBoxIn);
+            // Add Torch above door
             this.placeTorch(worldIn, EnumFacing.NORTH, 1, 3, 1, structureBoundingBoxIn);
-            this.createVillageDoor(worldIn, structureBoundingBoxIn, randomIn, 1, 1, 0, EnumFacing.NORTH);
 
-            if (this.getBlockStateFromPos(worldIn, 1, 0, -1, structureBoundingBoxIn).getMaterial() == Material.AIR && this.getBlockStateFromPos(worldIn, 1, -1, -1, structureBoundingBoxIn).getMaterial() != Material.AIR) {
-                this.setBlockState(worldIn, stairBlock, 1, 0, -1, structureBoundingBoxIn);
+            if (this.getBlockStateFromPos(worldIn, 1, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
+                this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
+            }
+            return result;
+        }
+    }
 
-                if (this.getBlockStateFromPos(worldIn, 1, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
-                    this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
+    public static class SnowHouse3 extends StructureVillagePieces.House3 {
+
+        public static SnowHouse3 createPiece(StructureVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
+            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(
+                    structureMinX, structureMinY, structureMinZ,
+                    0, 0, 0,
+                    9, 7, 12,
+                    facing
+            );
+            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null
+                    ? new SnowHouse3(start, type, rand, structureboundingbox, facing)
+                    : null;
+        }
+
+        public SnowHouse3() {}
+
+        public SnowHouse3(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox structurebb, EnumFacing facing) {
+            super(start, type, rand, structurebb, facing);
+        }
+
+//        @Override
+//        protected void spawnVillagers(World worldIn, StructureBoundingBox structurebb, int x, int y, int z, int count) {
+//            if(this instanceof IStructurePiecesVillagePieces_SnowVillageComponentMixin) {
+//                ((IStructurePiecesVillagePieces_SnowVillageComponentMixin) this).bettersnowvillages$spawnSnowVillagers(worldIn, boundingBox, x, y, z, count);
+//            }
+//            else {
+//                this.spawnVillagers(worldIn, structurebb, x, y, z, count);
+//                BetterSnowVillages.LOGGER.warn("Failed to spawn Ice and Fire Snow Villager in custom Structure Component");
+//            }
+//        }
+
+        @Override
+        protected IBlockState getBiomeSpecificBlockState(IBlockState blockstateIn) {
+            if(blockstateIn.getBlock() == Blocks.OAK_STAIRS) {
+                IBlockState sideLog = Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE);
+                switch (blockstateIn.getValue(BlockStairs.FACING)) {
+                    case NORTH: case SOUTH: sideLog = sideLog.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.X); break;
+                    case EAST: case WEST: sideLog = sideLog.withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Z); break;
                 }
+                blockstateIn = sideLog;
             }
 
-            for (int i = 0; i < 5; ++i) {
-                for (int j = 0; j < 4; ++j) {
-                    this.clearCurrentPositionBlocksUpwards(worldIn, j, 6, i, structureBoundingBoxIn);
-                    this.replaceAirAndLiquidDownwards(worldIn, foundationBlock, j, -1, i, structureBoundingBoxIn);
-                }
+            return super.getBiomeSpecificBlockState(blockstateIn);
+        }
+
+        @Override
+        public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+            boolean result = super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn);
+            if (this.averageGroundLvl < 0) {
+                return true;
             }
 
+            IBlockState sideLogZ = this.getBiomeSpecificBlockState(Blocks.LOG.getDefaultState().withProperty(BlockLog.LOG_AXIS, BlockLog.EnumAxis.Z));
+
+            // Replace planks in stair roof with logs
+            this.fillWithBlocks(worldIn, structureBoundingBoxIn, 5, 6, 3, 5, 6, 10, sideLogZ, sideLogZ, false);
+            this.setBlockState(worldIn, sideLogZ, 6, 6, 3, structureBoundingBoxIn);
+            this.setBlockState(worldIn, sideLogZ, 7, 5, 4, structureBoundingBoxIn);
+            this.setBlockState(worldIn, sideLogZ, 6, 6, 4, structureBoundingBoxIn);
+            for (int k = 4; k >= 1; --k) {
+                this.setBlockState(worldIn, sideLogZ, k, 2 + k, 7 - k, structureBoundingBoxIn);
+            }
+
+            // Keep stairs
+            if (this.getBlockStateFromPos(worldIn, 2, 0, -1, structureBoundingBoxIn).getBlock() == Blocks.LOG) {
+                this.setBlockState(worldIn, super.getBiomeSpecificBlockState(Blocks.OAK_STAIRS.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH)),
+                        2, 0, -1, structureBoundingBoxIn);
+            }
+
+            if (this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
+                this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
+            }
+            return result;
+        }
+    }
+
+    public static class SnowHouse4 extends StructureVillagePieces.House4Garden {
+
+        public static SnowHouse4 createPiece(StructureVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
+            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(
+                    structureMinX, structureMinY, structureMinZ,
+                    0, 0, 0,
+                    5, 6, 5,
+                    facing
+            );
+            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null
+                    ? new SnowHouse4(start, type, rand, structureboundingbox, facing)
+                    : null;
+        }
+
+        public SnowHouse4() {}
+
+        public SnowHouse4(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox structurebb, EnumFacing facing) {
+            super(start, type, rand, structurebb, facing);
+        }
+
+        @Override
+        protected void spawnVillagers(World worldIn, StructureBoundingBox structurebb, int x, int y, int z, int count) {
             if(this instanceof IStructurePiecesVillagePieces_SnowVillageComponentMixin) {
-                ((IStructurePiecesVillagePieces_SnowVillageComponentMixin) this).bettersnowvillages$spawnSnowVillagers(worldIn, structureBoundingBoxIn, 1, 1, 2, 1);
+                ((IStructurePiecesVillagePieces_SnowVillageComponentMixin) this).bettersnowvillages$spawnSnowVillagers(worldIn, boundingBox, x, y, z, count);
             }
             else {
-                this.spawnVillagers(worldIn, structureBoundingBoxIn, 1, 1, 2, 1);
+                this.spawnVillagers(worldIn, structurebb, x, y, z, count);
                 BetterSnowVillages.LOGGER.warn("Failed to spawn Ice and Fire Snow Villager in custom Structure Component");
             }
-            return true;
+        }
+
+        @Override
+        protected IBlockState getBiomeSpecificBlockState(IBlockState blockstateIn) {
+            blockstateIn = WorldGenBetterSnowVillage.getBasicSnowyPalletSwap(blockstateIn);
+            return super.getBiomeSpecificBlockState(blockstateIn);
+        }
+
+        @Override
+        public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
+            boolean result = super.addComponentParts(worldIn, randomIn, structureBoundingBoxIn);
+            if (this.averageGroundLvl < 0) {
+                return true;
+            }
+
+            // Window Color
+            this.setBlockState(worldIn, Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockStainedGlassPane.COLOR, EnumDyeColor.LIGHT_BLUE), 0, 2, 2, structureBoundingBoxIn);
+            this.setBlockState(worldIn, Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockStainedGlassPane.COLOR, EnumDyeColor.LIGHT_BLUE), 2, 2, 4, structureBoundingBoxIn);
+            this.setBlockState(worldIn, Blocks.STAINED_GLASS_PANE.getDefaultState().withProperty(BlockStainedGlassPane.COLOR, EnumDyeColor.LIGHT_BLUE), 4, 2, 2, structureBoundingBoxIn);
+
+            // Add Door below torch
+            this.createVillageDoor(worldIn, structureBoundingBoxIn, randomIn, 2, 1, 0, EnumFacing.NORTH);
+
+            if (this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
+                this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
+            }
+
+
+            return result;
         }
     }
 }

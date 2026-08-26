@@ -82,7 +82,10 @@ public class ComponentSnowVillageWaystone extends SnowVillagePieces.Village {
     public static ComponentSnowVillageWaystone createPiece(SnowVillagePieces.Start start, List<StructureComponent> structureComponentList, Random rand, int structureMinX, int structureMinY, int structureMinZ, EnumFacing facing, int type) {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(
                 structureMinX, structureMinY, structureMinZ,
-                0, 0, 0, 7, 6, 7, facing);
+                0, 0, 0,
+                7, 6, 7,
+                facing
+        );
         return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null
                 ? new ComponentSnowVillageWaystone(start, type, structureboundingbox, facing)
                 : null;
