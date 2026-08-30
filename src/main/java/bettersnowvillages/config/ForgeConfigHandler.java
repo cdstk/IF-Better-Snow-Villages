@@ -129,7 +129,7 @@ public class ForgeConfigHandler {
 				"ejektaflex.bountiful.worldgen.VillageBoardComponent, true",
 				"net.blay09.mods.waystones.worldgen.ComponentVillageWaystone, true",
 				"ivorius.reccomplex.dynamic.vanillagen.VillageMarketplace_vanilla_85673491, true",
-				"ivorius.reccomplex.dynamic.vanillagen.P_VillageFarmhouse_vanilla_226d02c8, true",
+				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SVillageBigIgloo_vanilla_425355a4, true",
 
 				"ivorius.reccomplex.dynamic.vanillagen.VillageChurch_vanilla_85673491, false",
 				"ivorius.reccomplex.dynamic.vanillagen.VillageForgeLarge_vanilla_85673491, false",
@@ -150,6 +150,7 @@ public class ForgeConfigHandler {
 				"ivorius.reccomplex.dynamic.vanillagen.P_AncientTeleporter_vanilla_dd3cfed9, false",
 				"ivorius.reccomplex.dynamic.vanillagen.P_SkyCastle_vanilla_34b2fef7, false",
 				"ivorius.reccomplex.dynamic.vanillagen.P_VillageBlacksmith_vanilla_6439e62e, false",
+				"ivorius.reccomplex.dynamic.vanillagen.P_VillageFarmhouse_vanilla_226d02c8, false",
 				"ivorius.reccomplex.dynamic.vanillagen.P_VillageHouse_vanilla_df295ef9, false",
 				"ivorius.reccomplex.dynamic.vanillagen.P_VillageHouse2_VillageHouseLarge, false",
 				"ivorius.reccomplex.dynamic.vanillagen.P_VillageInn_vanilla_9a6341f4, false",

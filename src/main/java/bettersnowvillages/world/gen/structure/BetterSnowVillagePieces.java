@@ -223,6 +223,7 @@ public class BetterSnowVillagePieces {
                             IBlockState replaceTarget = worldIn.getBlockState(blockpos);
                             if(replaceTarget.getBlock() == Blocks.SNOW_LAYER || replaceTarget.getMaterial() == Material.PLANTS) {
                                 replaceTarget = worldIn.getBlockState(blockpos.down());
+                                blockpos = blockpos.down();
                             }
 
                             if (replaceTarget.getBlock() == Blocks.GRASS || replaceTarget.getBlock() == Blocks.SNOW) {
