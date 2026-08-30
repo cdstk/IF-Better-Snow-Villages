@@ -101,6 +101,7 @@ public class ForgeConfigHandler {
 		})
 		@Config.Name("Better Snow Village Resource Pack Components")
 		public String[] snowVillageNBTComponents = {
+				"bettersnowvillages:snow_village_big_igloo, 		40, 1, 1, 	13, 9, 13,  0, -2, 0",
 				"minecraft:igloo/igloo_top, 						40, 1, 1, 	7, 5, 8, 	0, -1, 0",
 				"bettersnowvillages:snowy_animal_pen_1_cow, 		3, 0, 1, 	9, 6, 8,	0, 0, 0",
 				"bettersnowvillages:snowy_animal_pen_2_sheep, 		3, 0, 1, 	9, 6, 8, 	0, -1, 0",
@@ -129,7 +130,8 @@ public class ForgeConfigHandler {
 				"ejektaflex.bountiful.worldgen.VillageBoardComponent, true",
 				"net.blay09.mods.waystones.worldgen.ComponentVillageWaystone, true",
 				"ivorius.reccomplex.dynamic.vanillagen.VillageMarketplace_vanilla_85673491, true",
-				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SVillageBigIgloo_vanilla_425355a4, true",
+				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SnowVillageMarketplace_vanilla_5b8ff36c, false",
+				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SnowVillageBigIgloo_vanilla_425355a4, false",
 
 				"ivorius.reccomplex.dynamic.vanillagen.VillageChurch_vanilla_85673491, false",
 				"ivorius.reccomplex.dynamic.vanillagen.VillageForgeLarge_vanilla_85673491, false",
