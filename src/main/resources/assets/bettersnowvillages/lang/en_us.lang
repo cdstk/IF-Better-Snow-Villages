@@ -1,1 +1,4 @@
-effects.bettersnowvillages.example=Example
+item.bettersnowvillages.enchanted_randomly_book.name=Random Single Enchantment Book
+item.bettersnowvillages.enchanted_with_levels_book.name=Random Enchanted Book
+item.bettersnowvillages.enchanted_with_levels_book_treasure.name=Random Treasure Enchanted Book
+item.bettersnowvillages.with_levels.tooltip=With levels: %d

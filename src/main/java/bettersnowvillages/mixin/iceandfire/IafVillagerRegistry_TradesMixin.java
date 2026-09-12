@@ -31,7 +31,7 @@ public abstract class IafVillagerRegistry_TradesMixin {
                     to = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/registry/VillagerRegistry$VillagerCareer;addTrade(I[Lnet/minecraft/entity/passive/EntityVillager$ITradeList;)Lnet/minecraftforge/fml/common/registry/VillagerRegistry$VillagerCareer;", ordinal = 24)),
             remap = false
     )
-    private VillagerRegistry.VillagerCareer betterSnowVillages$iceAndFireIafVillagerRegistry_initClearTrades(VillagerRegistry.VillagerCareer instance, int i, EntityVillager.ITradeList[] level, Operation<VillagerRegistry.VillagerCareer> original){
+    private VillagerRegistry.VillagerCareer betterSnowVillages_iceAndFireIafVillagerRegistry_initClearTrades(VillagerRegistry.VillagerCareer instance, int i, EntityVillager.ITradeList[] level, Operation<VillagerRegistry.VillagerCareer> original){
         return instance;
     }
 
@@ -41,7 +41,7 @@ public abstract class IafVillagerRegistry_TradesMixin {
             slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraftforge/fml/common/registry/VillagerRegistry$VillagerCareer;addTrade(I[Lnet/minecraft/entity/passive/EntityVillager$ITradeList;)Lnet/minecraftforge/fml/common/registry/VillagerRegistry$VillagerCareer;", ordinal = 26)),
             remap = false
     )
-    private VillagerRegistry.VillagerCareer betterSnowVillages$iceAndFireIafVillagerRegistry_initClearTrades1(VillagerRegistry.VillagerCareer instance, int i, EntityVillager.ITradeList[] level, Operation<VillagerRegistry.VillagerCareer> original){
+    private VillagerRegistry.VillagerCareer betterSnowVillages_iceAndFireIafVillagerRegistry_initClearTrades1(VillagerRegistry.VillagerCareer instance, int i, EntityVillager.ITradeList[] level, Operation<VillagerRegistry.VillagerCareer> original){
         return instance;
     }
 
@@ -50,7 +50,7 @@ public abstract class IafVillagerRegistry_TradesMixin {
             at = @At(value = "NEW", target = "(Lnet/minecraftforge/fml/common/registry/VillagerRegistry$VillagerProfession;Ljava/lang/String;)Lnet/minecraftforge/fml/common/registry/VillagerRegistry$VillagerCareer;"),
             remap = false
     )
-    private VillagerRegistry.VillagerCareer www(VillagerRegistry.VillagerProfession parent, String name, Operation<VillagerRegistry.VillagerCareer> original){
+    private VillagerRegistry.VillagerCareer betterSnowVillages_iceAndFireIafVillagerRegistry_initTradesConfig(VillagerRegistry.VillagerProfession parent, String name, Operation<VillagerRegistry.VillagerCareer> original){
         VillagerRegistry.VillagerCareer career = original.call(parent, name);
 
         switch (name) {
@@ -104,14 +104,14 @@ public abstract class IafVillagerRegistry_TradesMixin {
         String[] inpL = inpId.split(":");
         Item inpItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(inpL[0].trim(), inpL[1].trim()));
         if(inpItem == null) {
-            BetterSnowVillages.LOGGER.log(Level.INFO, "Skipping Ice and Fire trade. No item: {}", inpId);
+            BetterSnowVillages.LOGGER.log(Level.INFO, "Skipping Ice and Fire trade. No input item: {}", inpId);
             return;
         }
 
         String[] outL = outId.split(":");
         Item outItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(outL[0].trim(), outL[1].trim()));
         if(outItem == null) {
-            BetterSnowVillages.LOGGER.log(Level.INFO, "Skipping Ice and Fire trade. No item: {}", outId);
+            BetterSnowVillages.LOGGER.log(Level.INFO, "Skipping Ice and Fire trade. No output item: {}", outId);
             return;
         }
 

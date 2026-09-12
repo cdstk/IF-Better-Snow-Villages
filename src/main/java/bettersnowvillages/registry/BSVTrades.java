@@ -25,7 +25,9 @@ public class BSVTrades {
             "3, iceandfire:sapphire_gem, 1, 1, minecraft:cooked_fish:1, 2, 2",
             "3, iceandfire:sapphire_gem, 1, 1, minecraft:tripwire_hook, 1, 1",
             "3, iceandfire:sapphire_gem, 1, 4, minecraft:fish:3, 		1, 1",
-            "3, iceandfire:sapphire_gem, 4, 4, iceandfire:sea_serpent_arrow,  4, 4"
+            "3, iceandfire:sapphire_gem, 4, 4, iceandfire:sea_serpent_arrow,  4, 4",
+            "3, iceandfire:sapphire_gem, 40, 48, bettersnowvillages:enchanted_with_levels_book:30, 1, 1",
+            "3, iceandfire:sapphire_gem, 64, 64, bettersnowvillages:enchanted_with_levels_book_treasure:30, 1, 1"
     };
 
     public static String[] vanillaCraftsmanTrades = {
@@ -62,7 +64,9 @@ public class BSVTrades {
             "3, iceandfire:sapphire_gem, 1, 6, minecraft:leather_leggings, 		1, 1",
             "3, iceandfire:sapphire_gem, 1, 7, minecraft:diamond_shovel, 		1, 1",
             "3, iceandfire:sapphire_gem, 1, 5, iceandfire:troll_leather_frost,  1, 1",
-            "3, iceandfire:sapphire_block, 1, 1, iceandfire:dragonbone_arrow,  8, 8"
+            "3, iceandfire:sapphire_block, 1, 1, iceandfire:dragonbone_arrow,  8, 8",
+            "3, iceandfire:ruby_gem, 40, 48, bettersnowvillages:enchanted_with_levels_book:30, 1, 1",
+            "3, iceandfire:ruby_gem, 64, 64, bettersnowvillages:enchanted_with_levels_book_treasure:30, 1, 1"
     };
 
     public static String[] vanillaShamanTrades = {
@@ -88,19 +92,21 @@ public class BSVTrades {
             "3, iceandfire:dread_key, 	1, 1, 	iceandfire:sapphire_gem, 1, 1",
             "1, iceandfire:sapphire_gem, 1, 2, iceandfire:manuscript, 		1, 1",
             "2, iceandfire:sapphire_gem, 2, 5, minecraft:ender_eye, 		1, 1",
-            "2, iceandfire:sapphire_gem, 6, 10, minecraft:ambrosia, 		1, 1",
+            "2, iceandfire:sapphire_gem, 6, 10, iceandfire:ambrosia, 		1, 1",
             "2, iceandfire:sapphire_gem, 2, 5, iceandfire:witherbone, 		1, 1",
             "2, iceandfire:sapphire_gem, 2, 3, iceandfire:wither_shard, 	1, 1",
             "3, iceandfire:sapphire_gem, 1, 5, iceandfire:ice_dragon_flesh, 1, 1",
             "3, iceandfire:sapphire_gem, 1, 12, iceandfire:ice_dragon_blood, 1, 1",
             "3, iceandfire:sapphire_gem, 1, 5, iceandfire:dragon_flute, 	1, 1",
-            "3, iceandfire:sapphire_gem, 4, 4, iceandfire:hydra_arrow,  4, 4"
+            "3, iceandfire:sapphire_gem, 4, 4, iceandfire:hydra_arrow,  4, 4",
+            "3, iceandfire:amethyst_gem, 40, 48, bettersnowvillages:enchanted_with_levels_book:30, 1, 1",
+            "3, iceandfire:amethyst_gem, 64, 64, bettersnowvillages:enchanted_with_levels_book_treasure:30, 1, 1"
     };
 
     public static String[] vanillaDesertWorkerTrades = {
             "1, minecraft:dirt, 		32, 64, 	iceandfire:myrmex_desert_resin, 1, 2",
             "1, minecraft:sand, 		32, 64, 	iceandfire:myrmex_desert_resin, 1, 2",
-            "2, minecraft:dead_bush, 	5, 10, 		iceandfire:myrmex_desert_resin, 1, 2",
+            "2, minecraft:deadbush, 	5, 10, 		iceandfire:myrmex_desert_resin, 1, 2",
             "3, minecraft:iron_ore, 	10, 15, 	iceandfire:myrmex_desert_resin, 1, 4",
             "4, minecraft:sugar, 		5, 8, 		iceandfire:myrmex_desert_resin, 1, 2",
             "4, iceandfire:myrmex_desert_resin, 1, 5, minecraft:bone, 5, 15"

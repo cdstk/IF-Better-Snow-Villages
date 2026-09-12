@@ -12,6 +12,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Config(modid = BetterSnowVillages.MODID)
 public class ForgeConfigHandler {
+
+	@Config.Name("Items")
+	public static final ItemConfig item = new ItemConfig();
 	
 	@Config.Name("Better Snow Village Generator")
 	public static final BetterSnowVillageGenConfig betterSVGen = new BetterSnowVillageGenConfig();
@@ -21,6 +24,46 @@ public class ForgeConfigHandler {
 
 	@Config.Name("Snow Villager and Myrmex Trades")
 	public static final TradesConfig trades = new TradesConfig();
+
+	public static class ItemConfig {
+
+		@Config.Comment({
+				"Register an item that replicates the [enchant_randomly] loot function.",
+				"Primarily used for Trades as it will become a random Enchanted Book when held by a player."
+		})
+		@Config.Name("Register The Enchanted Randomly Book")
+		@Config.RequiresMcRestart
+		public boolean enableEnchantedRandomlyBook = true;
+
+		@Config.Comment({
+				"Register an item that replicates the [enchant_with_levels] loot function.",
+				"Primarily used for Trades as it will become a random Enchanted Book when held by a player.",
+				"Has a treasure and non treasure enchantment allowed variants.",
+				"Levels are determined by meta data/durability."
+		})
+		@Config.Name("Register The Enchanted With Levels Book")
+		@Config.RequiresMcRestart
+		public boolean enableEnchantedWithLevelsBook = true;
+
+		@Config.Comment({
+				"List of enchantments used when The Enchanted Randomly Book generates enchantments.",
+				"Empty - Vanilla behavior of any enchantment in the game",
+				"Whitelist - Only enchantments on this list",
+				"Blacklist - Any enchantment in the game minus those on this list"
+		})
+		@Config.Name("The Enchanted Randomly Book - Whitelisted Enchantments")
+		public String[] enchantedRandomlyEnchantments = {
+
+		};
+
+		@Config.Comment("If true, whitelist. Else, blacklist.")
+		@Config.Name("The Enchanted Randomly Book - Is Whitelist")
+		public boolean enchantedRandomlyWhitelist = true;
+
+		@Config.Comment("How many additional \"levels\" per point of luck, rounded down.")
+		@Config.Name("The Enchanted With Levels Book - Luck Factor")
+		public float enchantedWithLevelsLuck = 1.0F;
+	}
 
 	@MixinConfig(name = BetterSnowVillages.MODID)
 	public static class BetterSnowVillageGenConfig {

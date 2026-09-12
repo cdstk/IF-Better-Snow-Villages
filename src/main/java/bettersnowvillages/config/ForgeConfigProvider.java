@@ -4,10 +4,12 @@ import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.config.worldgen.ClassGenInfo;
 import bettersnowvillages.config.worldgen.NBTGenInfo;
 import bettersnowvillages.registry.BSVTrades;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 
 import java.util.ArrayList;
@@ -21,9 +23,14 @@ import java.util.Set;
 
 public class ForgeConfigProvider {
 
+    private static final List<Enchantment> defaultEnchantedRandomlyBookPool = new ArrayList<>();
     private static final Set<String> disabledSnowVillageComponentClassNames = new HashSet<>();
     private static final Map<Class<? extends StructureVillagePieces.Village>, ClassGenInfo> classGenInfo = new HashMap<>();
     private static final Map<ResourceLocation, NBTGenInfo> nbtGenInfo = new HashMap<>();
+
+    public static List<Enchantment> getDefaultEnchantedRandomlyBookPool() {
+        return defaultEnchantedRandomlyBookPool;
+    }
 
     public static void removeDisabledSnowVillageComponents(List<StructureVillagePieces.PieceWeight> list) {
         list.removeIf(pieceWeight -> disabledSnowVillageComponentClassNames.contains(pieceWeight.villagePieceClass.getName()));
@@ -46,6 +53,13 @@ public class ForgeConfigProvider {
         // Save
         if(sync)
             ConfigManager.sync(BetterSnowVillages.MODID, Config.Type.INSTANCE);
+
+        ForgeConfigProvider.defaultEnchantedRandomlyBookPool.clear();
+        Arrays.stream(ForgeConfigHandler.item.enchantedRandomlyEnchantments).forEach(config -> {
+            ResourceLocation enchID = new ResourceLocation(config.trim());
+            if(ForgeRegistries.ENCHANTMENTS.containsKey(enchID))
+                ForgeConfigProvider.defaultEnchantedRandomlyBookPool.add(ForgeRegistries.ENCHANTMENTS.getValue(enchID));
+        });
 
         ForgeConfigProvider.disabledSnowVillageComponentClassNames.clear();
         Arrays.stream(ForgeConfigHandler.betterSVGen.snowVillageComponents).forEach(config -> {
