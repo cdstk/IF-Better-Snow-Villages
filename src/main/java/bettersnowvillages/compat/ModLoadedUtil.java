@@ -1,6 +1,7 @@
 package bettersnowvillages.compat;
 
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 
@@ -51,21 +52,43 @@ public class ModLoadedUtil {
     }
 
     public static class INFLoadedContainer extends LoadedContainer{
+        public enum FORK {
+            BASE,
+            RLCRAFT,
+            ROTN
+        }
+
+        public final FORK fork;
         private Boolean isLightingFork = null;
         private INFLoadedContainer(String key) {
             super(key);
-        }
-        // Based on RLCombat's check
-        public boolean isLightningFork(){
-            if(isLightingFork == null) {
-                isLightingFork = false;
-                String[] arrOfStr = Loader.instance().getIndexedModList().get("iceandfire").getVersion().split("\\.");
-                try {
-                    int i = Integer.parseInt(String.valueOf(arrOfStr[0]));
-                    if (i >= 2) isLightingFork = true;
-                } catch (Exception ignored) {}
+            if(this.isLoaded()) {
+                ModContainer modContainer = Loader.instance().getIndexedModList().get(key);
+                if(modContainer.getName().equals("Ice and Fire: RotN Edition")) {
+                    this.fork = FORK.ROTN;
+                }
+                else if(modContainer.getMetadata().authorList.contains("Kotlin-Programmer")) {
+                    this.fork = FORK.RLCRAFT;
+                }
+                else {
+                    this.fork = FORK.BASE;
+                }
             }
-            return isLightingFork;
+            else {
+                this.fork = FORK.BASE;
+            }
         }
+//        // Based on RLCombat's check
+//        public boolean isLightningFork(){
+//            if(isLightingFork == null) {
+//                isLightingFork = false;
+//                String[] arrOfStr = Loader.instance().getIndexedModList().get("iceandfire").getVersion().split("\\.");
+//                try {
+//                    int i = Integer.parseInt(String.valueOf(arrOfStr[0]));
+//                    if (i >= 2) isLightingFork = true;
+//                } catch (Exception ignored) {}
+//            }
+//            return isLightingFork;
+//        }
     }
 }

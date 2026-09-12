@@ -1,6 +1,7 @@
 package bettersnowvillages.world.gen.structure;
 
 import bettersnowvillages.BetterSnowVillages;
+import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.config.ForgeConfigProvider;
 import bettersnowvillages.util.IStructurePiecesVillagePieces_SnowVillageComponentMixin;
@@ -11,7 +12,6 @@ import bettersnowvillages.world.gen.componenthandlers.VillageSnowHouse4CreationH
 import bettersnowvillages.world.gen.componenthandlers.VillageSnowPathCreationHandler;
 import bettersnowvillages.world.gen.componenthandlers.VillageSnowWellCreationHandler;
 import bettersnowvillages.world.gen.componenthandlers.VillageSnowWoodHutCreationHandler;
-import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import com.google.common.collect.Lists;
 import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockLog;
@@ -203,7 +203,7 @@ public class BetterSnowVillagePieces {
 
         @Override
         public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
-            IBlockState commonPathBlock = this.getBiomeSpecificBlockState(IafBlockRegistry.frozenGrassPath.getDefaultState());
+            IBlockState commonPathBlock = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
             IBlockState aquaticPathBlock = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState());
             IBlockState sandyPathBlock = this.getBiomeSpecificBlockState(Blocks.GRAVEL.getDefaultState());
             IBlockState sandySupportBlock = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
@@ -286,7 +286,7 @@ public class BetterSnowVillagePieces {
                 this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 3, 0);
             }
 
-            IBlockState commonPath = this.getBiomeSpecificBlockState(IafBlockRegistry.frozenGrassPath.getDefaultState());
+            IBlockState commonPath = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
             IBlockState ice = this.getBiomeSpecificBlockState(Blocks.PACKED_ICE.getDefaultState());
             IBlockState wellWater = ModLoadedUtil.CHARM.isLoaded() ? Blocks.AIR.getDefaultState() : Blocks.FLOWING_WATER.getDefaultState();
             this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 4, 12, 4, ice, Blocks.FLOWING_WATER.getDefaultState(), false);
@@ -298,7 +298,7 @@ public class BetterSnowVillagePieces {
             // Charm injects carpet so just make vanilla well
             if(ModLoadedUtil.CHARM.isLoaded()) {
                 IBlockState fence = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
-                IBlockState roof = this.getBiomeSpecificBlockState(IafBlockRegistry.frozenCobblestone.getDefaultState());
+                IBlockState roof = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenCobblestone().getDefaultState());
                 this.setBlockState(worldIn, fence, 1, 13, 1, structureBoundingBoxIn);
                 this.setBlockState(worldIn, fence, 1, 14, 1, structureBoundingBoxIn);
                 this.setBlockState(worldIn, fence, 4, 13, 1, structureBoundingBoxIn);
@@ -414,7 +414,7 @@ public class BetterSnowVillagePieces {
             // Add Torch above door
             this.placeTorch(worldIn, EnumFacing.NORTH, 1, 3, 1, structureBoundingBoxIn);
 
-            if (this.getBlockStateFromPos(worldIn, 1, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
+            if (this.getBlockStateFromPos(worldIn, 1, -1, -1, structureBoundingBoxIn).getBlock() == IceAndFireForksUtil.getFrozenGrassPath()) {
                 this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
             }
             return result;
@@ -490,7 +490,7 @@ public class BetterSnowVillagePieces {
                         2, 0, -1, structureBoundingBoxIn);
             }
 
-            if (this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
+            if (this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock() == IceAndFireForksUtil.getFrozenGrassPath()) {
                 this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
             }
             return result;
@@ -549,7 +549,7 @@ public class BetterSnowVillagePieces {
             // Add Door below torch
             this.createVillageDoor(worldIn, structureBoundingBoxIn, randomIn, 2, 1, 0, EnumFacing.NORTH);
 
-            if (this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock() == IafBlockRegistry.frozenGrassPath) {
+            if (this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock() == IceAndFireForksUtil.getFrozenGrassPath()) {
                 this.setBlockState(worldIn, Blocks.GRASS.getDefaultState(), 1, -1, -1, structureBoundingBoxIn);
             }
 

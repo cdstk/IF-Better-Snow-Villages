@@ -1,7 +1,7 @@
 package bettersnowvillages.mixin.iceandfire;
 
 import bettersnowvillages.registry.BSVTrades;
-import com.github.alexthe666.iceandfire.entity.IafVillagerRegistry;
+import com.github.alexthe666.iceandfire.core.ModVillagers;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.entity.passive.EntityVillager;
@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
 
-@Mixin(IafVillagerRegistry.class)
-public abstract class IafVillagerRegistry_TradesMixin {
+@Mixin(ModVillagers.class)
+public abstract class ModVillagers_TradesMixin {
 
     // Based on https://github.com/Krutoy242/Enigmatica2Expert-Extended/blob/master/scripts/mixin/iceandfire.zs
 

@@ -1,8 +1,8 @@
 package bettersnowvillages.world.gen.structure;
 
 import bettersnowvillages.compat.IceAndFireForksUtil;
+import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.config.ForgeConfigHandler;
-import com.github.alexthe666.iceandfire.block.IafBlockRegistry;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
@@ -31,15 +31,18 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
     }
 
     public static boolean isVillageGenAllowedInDim(int id) {
-        for (int i : IceAndFireForksUtil.getSnowVillageDimensionsConfig(ForgeConfigHandler.betterSVGen.useIFConfig)) {
-            if (i == id) return IceAndFireForksUtil.getSnowVillageDimWhitelistConfig(ForgeConfigHandler.betterSVGen.useIFConfig);
+        for (int i : IceAndFireForksUtil.getSnowVillageDimBlacklistConfig(ForgeConfigHandler.betterSVGen.useIFConfig)) {
+            if (i == id) return false;
         }
-        return !IceAndFireForksUtil.getSnowVillageDimWhitelistConfig(ForgeConfigHandler.betterSVGen.useIFConfig);
+        for (int i : IceAndFireForksUtil.getSnowVillageDimWhitelistConfig(ForgeConfigHandler.betterSVGen.useIFConfig)) {
+            if (i == id) return true;
+        }
+        return ModLoadedUtil.ICEANDFIRE.fork != ModLoadedUtil.INFLoadedContainer.FORK.RLCRAFT;
     }
 
     public static IBlockState getBasicSnowyPalletSwap(IBlockState blockState) {
         if(blockState == Blocks.COBBLESTONE.getDefaultState()) {
-            blockState = IafBlockRegistry.frozenCobblestone.getDefaultState();
+            blockState = IceAndFireForksUtil.getFrozenCobblestone().getDefaultState();
         }
         else if(blockState == Blocks.PLANKS.getDefaultState()) {
             blockState = Blocks.SNOW.getDefaultState();

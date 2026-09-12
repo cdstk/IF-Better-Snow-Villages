@@ -1,6 +1,9 @@
 package bettersnowvillages.wrapper;
 
 import bettersnowvillages.compat.IceAndFireForksUtil;
+import bettersnowvillages.compat.ModLoadedUtil;
+import bettersnowvillages.compat.iceandfire.wrapper.IaFVillagerRegistryWrapper;
+import bettersnowvillages.compat.iceandfire.wrapper.ModVillagersWrapper;
 import com.github.alexthe666.iceandfire.entity.EntitySnowVillager;
 import com.github.alexthe666.iceandfire.entity.IafVillagerRegistry;
 import net.minecraft.entity.EntityLiving;
@@ -20,7 +23,16 @@ public class BetterSnowVillagesWrapper {
     }
 
     public static void setRandomSnowProfession(EntityVillager villager, Random rand) {
-        if(villager instanceof EntitySnowVillager)
-            IafVillagerRegistry.INSTANCE.setRandomProfession((EntitySnowVillager) villager, rand);
+        if(villager instanceof EntitySnowVillager) {
+            if (ModLoadedUtil.ICEANDFIRE.fork == ModLoadedUtil.INFLoadedContainer.FORK.RLCRAFT) {
+                IafVillagerRegistry.INSTANCE.setRandomProfession((EntitySnowVillager) villager, rand);
+            }
+            else if (IceAndFireForksUtil.getModernRegistry()) {
+                IaFVillagerRegistryWrapper.setRandomSnowProfession(villager, rand);
+            }
+            else {
+                ModVillagersWrapper.setRandomSnowProfession((EntitySnowVillager) villager, rand);
+            }
+        }
     }
 }
