@@ -288,7 +288,8 @@ public class BetterSnowVillagePieces {
 
             IBlockState commonPath = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
             IBlockState ice = this.getBiomeSpecificBlockState(Blocks.PACKED_ICE.getDefaultState());
-            IBlockState wellWater = ModLoadedUtil.CHARM.isLoaded() ? Blocks.AIR.getDefaultState() : Blocks.FLOWING_WATER.getDefaultState();
+            IBlockState wellWater = Blocks.FLOWING_WATER.getDefaultState();
+//            IBlockState wellWater = ModLoadedUtil.CHARM.isLoaded() ? Blocks.AIR.getDefaultState() : Blocks.FLOWING_WATER.getDefaultState();
             this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, 1, 4, 12, 4, ice, Blocks.FLOWING_WATER.getDefaultState(), false);
             this.setBlockState(worldIn, wellWater, 2, 12, 2, structureBoundingBoxIn);
             this.setBlockState(worldIn, wellWater, 3, 12, 2, structureBoundingBoxIn);
@@ -296,20 +297,20 @@ public class BetterSnowVillagePieces {
             this.setBlockState(worldIn, wellWater, 3, 12, 3, structureBoundingBoxIn);
 
             // Charm injects carpet so just make vanilla well
-            if(ModLoadedUtil.CHARM.isLoaded()) {
-                IBlockState fence = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
-                IBlockState roof = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenCobblestone().getDefaultState());
-                this.setBlockState(worldIn, fence, 1, 13, 1, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 1, 14, 1, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 4, 13, 1, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 4, 14, 1, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 1, 13, 4, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 1, 14, 4, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 4, 13, 4, structureBoundingBoxIn);
-                this.setBlockState(worldIn, fence, 4, 14, 4, structureBoundingBoxIn);
-                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 15, 1, 4, 15, 4, roof, roof, false);
-            }
-            else {
+//            if(ModLoadedUtil.CHARM.isLoaded()) {
+//                IBlockState fence = this.getBiomeSpecificBlockState(Blocks.OAK_FENCE.getDefaultState());
+//                IBlockState roof = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenCobblestone().getDefaultState());
+//                this.setBlockState(worldIn, fence, 1, 13, 1, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 1, 14, 1, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 4, 13, 1, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 4, 14, 1, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 1, 13, 4, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 1, 14, 4, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 4, 13, 4, structureBoundingBoxIn);
+//                this.setBlockState(worldIn, fence, 4, 14, 4, structureBoundingBoxIn);
+//                this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 15, 1, 4, 15, 4, roof, roof, false);
+//            }
+             {
                 IBlockState torch = this.getBiomeSpecificBlockState(Blocks.TORCH.getDefaultState());
                 this.setBlockState(worldIn, torch, 1, 12, 1, structureBoundingBoxIn);
                 this.setBlockState(worldIn, torch, 4, 12, 1, structureBoundingBoxIn);

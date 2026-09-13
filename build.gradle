@@ -80,6 +80,7 @@ dependencies {
     compileOnly fg.deobf("curse.maven:recurrent-complex-${recurrentcomplex_version}")
 
     compileOnly fg.deobf("curse.maven:quark-${quark_version}")
+    compileOnly fg.deobf("curse.maven:charm-${charm_version}")
 }
 
 mixin {

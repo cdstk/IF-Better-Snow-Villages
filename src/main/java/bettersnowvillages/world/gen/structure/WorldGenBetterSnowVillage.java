@@ -1,5 +1,6 @@
 package bettersnowvillages.world.gen.structure;
 
+import bettersnowvillages.compat.CharmHandler;
 import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.config.ForgeConfigHandler;
@@ -7,6 +8,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -16,6 +18,7 @@ import net.minecraft.world.gen.structure.StructureStart;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraftforge.common.BiomeDictionary;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -71,11 +74,12 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
 
         int chunkX = position.getX() >> 4;
         int chunkZ = position.getZ() >> 4;
-        StructureStart start = new WorldGenBetterSnowVillage.Start(worldIn, rand, chunkX, chunkZ, 0);
+        WorldGenBetterSnowVillage.Start start = new WorldGenBetterSnowVillage.Start(worldIn, rand, chunkX, chunkZ, 0);
         StructureBoundingBox boundingBox = start.getBoundingBox();
         boundingBox.minY = 1;
         boundingBox.maxY = 512;
         start.generateStructure(worldIn, rand, boundingBox);
+        start.markCharmSnowVillageChunks(worldIn, position);
         return true;
     }
 
@@ -116,25 +120,44 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
             while (!pendingRoads.isEmpty() || !pendingHouses.isEmpty()) {
                 if (pendingRoads.isEmpty()) {
                     int i = rand.nextInt(pendingHouses.size());
-                    StructureComponent structurecomponent = pendingHouses.remove(i);
-                    structurecomponent.buildComponent(start, this.components, rand);
+                    StructureComponent house = pendingHouses.remove(i);
+                    house.buildComponent(start, this.components, rand);
                 } else {
                     int j = rand.nextInt(pendingRoads.size());
-                    StructureComponent structurecomponent2 = pendingRoads.remove(j);
-                    structurecomponent2.buildComponent(start, this.components, rand);
+                    StructureComponent road = pendingRoads.remove(j);
+                    road.buildComponent(start, this.components, rand);
                 }
             }
 
             this.updateBoundingBox();
             int k = 0;
 
-            for (StructureComponent structurecomponent1 : this.components) {
-                if (!(structurecomponent1 instanceof StructureVillagePieces.Road)) {
+            for (StructureComponent structureComponent : this.components) {
+                if (!(structureComponent instanceof StructureVillagePieces.Road)) {
                     ++k;
                 }
             }
 
             this.hasMoreThanTwoComponents = k > 2;
+        }
+
+        public void markCharmSnowVillageChunks(World world, BlockPos blockPos) {
+            if(!ModLoadedUtil.CHARM.isLoaded()) return;
+
+            ArrayList<ChunkPos> chunks = new ArrayList<>();
+
+            int minChunkX = boundingBox.minX >> 4;
+            int maxChunkX = boundingBox.maxX >> 4;
+            int minChunkZ = boundingBox.minZ >> 4;
+            int maxChunkZ = boundingBox.maxZ >> 4;
+
+            for (int x = minChunkX; x <= maxChunkX; x++) {
+                for (int z = minChunkZ; z <= maxChunkZ; z++) {
+                    chunks.add(new ChunkPos(x, z));
+                }
+            }
+
+            CharmHandler.addSnowVillageChunks(world.provider.getDimension(), (long) blockPos.toString().hashCode(), chunks);
         }
 
         public boolean isSizeableStructure() {

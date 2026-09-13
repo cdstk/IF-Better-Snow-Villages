@@ -12,14 +12,14 @@ public class ModLoadedUtil {
     private static final String CHARM_MODID = "charm";
     public static final String ICEANDFIRE_MODID = "iceandfire";
     public static final String QUARK_MODID = "quark";
-    public static final String RECURRENTCOMPLEX_MODID = "reccomplex";
+//    public static final String RECURRENTCOMPLEX_MODID = "reccomplex";
     public static final String WAYSTONES_MODID = "waystones";
 
     public static LoadedContainer BOUNTIFUL = new LoadedContainer(BOUNTIFUL_MODID);
     public static LoadedContainer CHARM = new LoadedContainer(CHARM_MODID);
     public static INFLoadedContainer ICEANDFIRE = new INFLoadedContainer(ICEANDFIRE_MODID);
     public static LoadedContainer QUARK = new LoadedContainer(QUARK_MODID);
-    public static LoadedContainer RECURRENTCOMPLEX = new LoadedContainer(RECURRENTCOMPLEX_MODID);
+//    public static LoadedContainer RECURRENTCOMPLEX = new LoadedContainer(RECURRENTCOMPLEX_MODID);
     public static LoadedContainer WAYSTONES = new LoadedContainer(WAYSTONES_MODID);
 
     // Nischhelm style

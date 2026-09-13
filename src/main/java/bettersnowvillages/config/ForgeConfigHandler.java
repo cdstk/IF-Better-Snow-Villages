@@ -127,11 +127,9 @@ public class ForgeConfigHandler {
 		@Config.Name("Better Snow Village Class Components")
 		public String[] snowVillageClassComponents = {
 				"net.minecraft.world.gen.structure.StructureVillagePieces$Church, 1, -8, 1",
-				"net.minecraft.world.gen.structure.StructureVillagePieces$House3, 1, -8, 1",
-				"net.minecraft.world.gen.structure.StructureVillagePieces$House4Garden, 1, -3, 1",
 				"bettersnowvillages.world.gen.structure.BetterSnowVillagePieces$ExtraTorch, 50, 5, 6",
 				"bettersnowvillages.world.gen.structure.BetterSnowVillagePieces$SnowWoodHut, 40, 2, 3",
-				"bettersnowvillages.world.gen.structure.BetterSnowVillagePieces$SnowHouse3, 1, -8, 0",
+				"bettersnowvillages.world.gen.structure.BetterSnowVillagePieces$SnowHouse3, 1, -8, 1",
 				"bettersnowvillages.world.gen.structure.BetterSnowVillagePieces$SnowHouse4, 40, 1, 2"
 		};
 
