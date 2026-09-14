@@ -1,4 +1,4 @@
-package bettersnowvillages.compat;
+package bettersnowvillages.compat.charm;
 
 import bettersnowvillages.world.gen.structure.BetterSnowVillagePieces;
 import net.minecraft.init.Blocks;
@@ -16,13 +16,10 @@ import svenhjol.charm.world.CharmWorld;
 import svenhjol.charm.world.decorator.inner.VillageInnerDecorator;
 import svenhjol.charm.world.decorator.outer.Barrels;
 import svenhjol.charm.world.decorator.outer.Crops;
-import svenhjol.charm.world.decorator.outer.Erosion;
 import svenhjol.charm.world.decorator.outer.Flowers;
 import svenhjol.charm.world.decorator.outer.Lights;
 import svenhjol.charm.world.decorator.outer.Mobs;
-import svenhjol.charm.world.decorator.outer.Mushrooms;
 import svenhjol.charm.world.decorator.outer.Pumpkins;
-import svenhjol.charm.world.decorator.outer.Trees;
 import svenhjol.charm.world.feature.VillageDecorations;
 import svenhjol.meson.decorator.MesonOuterDecorator;
 import svenhjol.meson.event.StructureEventBase;
@@ -46,6 +43,7 @@ public class CharmHandler {
     public static void registerSnowVillageDecorations() {
         if(Charm.hasModule(CharmWorld.class) && Charm.hasFeature(VillageDecorations.class)) {
             MinecraftForge.EVENT_BUS.register(CharmHandler.class);
+            MinecraftForge.TERRAIN_GEN_BUS.register(CharmHandler.class);
         }
     }
 
@@ -96,16 +94,17 @@ public class CharmHandler {
 //                chunks.add(chunkPos);
 //        });
 
+//        if (villageRand.nextDouble() <= VillageDecorations.treesChance) decorators.add(new Trees(world, pos, eventRand, chunks));
+//        if (villageRand.nextDouble() <= VillageDecorations.mushroomsChance) decorators.add(new Mushrooms(world, pos, eventRand, chunks));
+
         if(villageRand.nextDouble() <= VillageDecorations.flowersChance) decorators.add(new Flowers(world, pos, villageRand, chunks));
         if (villageRand.nextDouble() <= VillageDecorations.lightsChance) decorators.add(new Lights(world, pos, eventRand, chunks));
         if (villageRand.nextDouble() <= VillageDecorations.mobsChance) decorators.add(new Mobs(world, pos, eventRand, chunks));
         if (villageRand.nextDouble() <= VillageDecorations.cropsChance) decorators.add(new Crops(world, pos, eventRand, chunks));
         if (villageRand.nextDouble() <= VillageDecorations.barrelsChance) decorators.add(new Barrels(world, pos, eventRand, chunks));
         if (villageRand.nextDouble() <= VillageDecorations.pumpkinsChance) decorators.add(new Pumpkins(world, pos, eventRand, chunks));
-        if (villageRand.nextDouble() <= VillageDecorations.treesChance) decorators.add(new Trees(world, pos, eventRand, chunks));
-        if (villageRand.nextDouble() <= VillageDecorations.mushroomsChance) decorators.add(new Mushrooms(world, pos, eventRand, chunks));
         if (VillageDecorations.zombieVillageErosion && ZOMBIE_SNOW_VILLAGES.contains(chunk)) {
-            decorators.add(new Erosion(world, pos, villageRand, chunks));
+            decorators.add(new SnowVillageErosion(world, pos, villageRand, chunks));
         }
 
         decorators.forEach(MesonOuterDecorator::generate);

@@ -1,7 +1,7 @@
 package bettersnowvillages;
 
-import bettersnowvillages.compat.CharmHandler;
 import bettersnowvillages.compat.ModLoadedUtil;
+import bettersnowvillages.compat.charm.CharmHandler;
 import bettersnowvillages.config.ForgeConfigProvider;
 import bettersnowvillages.proxy.CommonProxy;
 import bettersnowvillages.world.gen.BetterSnowVillagesStructureGenerator;

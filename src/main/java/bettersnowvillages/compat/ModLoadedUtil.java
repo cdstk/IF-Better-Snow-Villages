@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
 public class ModLoadedUtil {
 
     public static final String BOUNTIFUL_MODID = "bountiful";
-    private static final String CHARM_MODID = "charm";
+    public static final String CHARM_MODID = "charm";
     public static final String ICEANDFIRE_MODID = "iceandfire";
     public static final String QUARK_MODID = "quark";
 //    public static final String RECURRENTCOMPLEX_MODID = "reccomplex";

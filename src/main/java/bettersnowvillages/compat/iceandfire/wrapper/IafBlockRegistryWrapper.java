@@ -9,7 +9,15 @@ public class IafBlockRegistryWrapper {
         return IafBlockRegistry.frozenCobblestone;
     }
 
+    public static Block getFrozenGravel() {
+        return IafBlockRegistry.frozenGravel;
+    }
+
     public static Block getFrozenGrassPath() {
         return IafBlockRegistry.frozenGrassPath;
+    }
+
+    public static Block getDragonIceSpikes() {
+        return IafBlockRegistry.dragon_ice_spikes;
     }
 }

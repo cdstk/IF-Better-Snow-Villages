@@ -68,8 +68,8 @@ dependencies {
 
     runtimeOnly fg.deobf("curse.maven:llibrary-${llibrary_version}")
     implementation fg.deobf("curse.maven:iceandfire-rlcraft-${iceandfirerlc_version}")
-    implementation fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
-    implementation fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
+    fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
+    fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
 
     compileOnly fg.deobf("curse.maven:waystones-${waystones_version}")
 

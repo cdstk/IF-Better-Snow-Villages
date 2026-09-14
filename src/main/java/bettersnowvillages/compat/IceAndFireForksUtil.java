@@ -112,9 +112,21 @@ public class IceAndFireForksUtil {
                 : ModBlocksWrapper.getFrozenCobblestone();
     }
 
+    public static Block getFrozenGravel() {
+        return getModernRegistry()
+                ? IafBlockRegistryWrapper.getFrozenGravel()
+                : ModBlocksWrapper.getFrozenGravel();
+    }
+
     public static Block getFrozenGrassPath() {
         return getModernRegistry()
                 ? IafBlockRegistryWrapper.getFrozenGrassPath()
                 : ModBlocksWrapper.getFrozenGrassPath();
+    }
+
+    public static Block getDragonIceSpikes() {
+        return getModernRegistry()
+                ? IafBlockRegistryWrapper.getDragonIceSpikes()
+                : ModBlocksWrapper.getDragonIceSpikes();
     }
 }

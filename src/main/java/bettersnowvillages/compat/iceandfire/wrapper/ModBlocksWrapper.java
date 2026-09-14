@@ -9,7 +9,15 @@ public class ModBlocksWrapper {
         return ModBlocks.frozenCobblestone;
     }
 
+    public static Block getFrozenGravel() {
+        return ModBlocks.frozenGravel;
+    }
+
     public static Block getFrozenGrassPath() {
         return ModBlocks.frozenGrassPath;
+    }
+
+    public static Block getDragonIceSpikes() {
+        return ModBlocks.dragon_ice_spikes;
     }
 }

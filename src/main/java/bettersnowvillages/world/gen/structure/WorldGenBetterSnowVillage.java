@@ -1,8 +1,8 @@
 package bettersnowvillages.world.gen.structure;
 
-import bettersnowvillages.compat.CharmHandler;
 import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
+import bettersnowvillages.compat.charm.CharmHandler;
 import bettersnowvillages.config.ForgeConfigHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;

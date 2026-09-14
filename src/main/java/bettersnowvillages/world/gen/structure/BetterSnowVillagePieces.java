@@ -2,7 +2,6 @@ package bettersnowvillages.world.gen.structure;
 
 import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.compat.IceAndFireForksUtil;
-import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.config.ForgeConfigProvider;
 import bettersnowvillages.util.IStructurePiecesVillagePieces_SnowVillageComponentMixin;
 import bettersnowvillages.world.gen.componenthandlers.VillageNBTCreationHandler;
