@@ -32,6 +32,8 @@ public abstract class StructureVillagePieces_NBTComponentMixin {
                     facing
             );
 
+            VillageNBTComponent.alignBoundingBox(nbtPiece, boundingBox, facing);
+
             if (boundingBox.minY > 10) {
                 if (StructureComponent.findIntersecting(structureComponents, boundingBox) == null) {
                     cir.setReturnValue(new VillageNBTComponent(nbtPiece.resourceLocation, nbtPiece, start, componentType, boundingBox, facing));

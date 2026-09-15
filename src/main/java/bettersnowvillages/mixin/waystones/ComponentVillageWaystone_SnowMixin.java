@@ -3,7 +3,7 @@ package bettersnowvillages.mixin.waystones;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.compat.QuarkUtil;
 import bettersnowvillages.compat.waystones.worldgen.ComponentSnowVillageWaystone;
-import bettersnowvillages.world.gen.structure.WorldGenBetterSnowVillage;
+import bettersnowvillages.world.gen.structure.MapGenBetterSnowVillage;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.blay09.mods.waystones.worldgen.ComponentVillageWaystone;
 import net.minecraft.util.ResourceLocation;
@@ -26,9 +26,10 @@ public abstract class ComponentVillageWaystone_SnowMixin extends StructureVillag
             index = 1
     )
     private ResourceLocation betterSnowVillages$waystonesComponentVillageWaystone_addComponentPartsSnow(ResourceLocation id, @Local(argsOnly = true) World world, @Local BlockPos pos){
-        Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(world.getBiome(pos));
-        if(WorldGenBetterSnowVillage.isBiomeTypesValid(types) && WorldGenBetterSnowVillage.isComponentOfSnowVillage(this.startPiece)) {
+        if(world.getBiomeProvider().areBiomesViable(pos.getX(), pos.getZ(), 0, MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES)
+                && MapGenBetterSnowVillage.isComponentOfSnowVillage(this.startPiece)) {
             if (ModLoadedUtil.QUARK.isLoaded() && QuarkUtil.isSnowBrickEnabled()) {
+                Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(world.getBiome(pos));
                 return types.contains(BiomeDictionary.Type.FOREST)
                         ? ComponentSnowVillageWaystone.VANILlA_WAYSTONE_ID
                         : ComponentSnowVillageWaystone.QUARK_WAYSTONE_ID;

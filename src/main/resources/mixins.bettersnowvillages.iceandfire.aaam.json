@@ -6,8 +6,7 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
-    "iceandfire.IafVillagerRegistry_TradesMixin",
-    "iceandfire.ModVillagers_TradesMixin"
+    "iceandfire.aaam.MapGenSnowVillage$Start_AAAMMixin"
   ],
   "injectors": {
     "maxShiftBy": 10

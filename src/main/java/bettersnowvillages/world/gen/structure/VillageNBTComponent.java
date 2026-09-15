@@ -22,6 +22,40 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
     public final ResourceLocation resourceLocation;
     public final VillageNBTPieceWeight nbtPieceWeight;
 
+    public static void alignBoundingBox(VillageNBTPieceWeight nbtPieceWeight, StructureBoundingBox boundingBox, EnumFacing facing) {
+        int xOffset = 0;
+        int zOffset = 0;
+
+        // Recenter BB for template rotation
+        switch (Rotation.CLOCKWISE_180.rotate(facing)) {
+            case NORTH:
+                xOffset = nbtPieceWeight.xOffset;
+                zOffset = nbtPieceWeight.zOffset;
+                break;
+            case WEST:
+                xOffset = nbtPieceWeight.zOffset;
+                zOffset = nbtPieceWeight.xOffset;
+                break;
+            case SOUTH:
+                xOffset = -nbtPieceWeight.xOffset;
+                zOffset = -nbtPieceWeight.zOffset;
+                boundingBox.offset(0, 0, boundingBox.maxZ - boundingBox.minZ);
+                break;
+            case EAST:
+                xOffset = -nbtPieceWeight.zOffset;
+                zOffset = -nbtPieceWeight.xOffset;
+                boundingBox.offset(boundingBox.maxX - boundingBox.minX, 0, 0);
+                break;
+        }
+
+        // Blending config
+        boundingBox.offset(
+                xOffset,
+                nbtPieceWeight.yOffset,
+                zOffset
+        );
+    }
+
     public VillageNBTComponent(@Nonnull ResourceLocation resourceLocation, VillageNBTPieceWeight nbtPieceWeight, StructureVillagePieces.Start start, int type, StructureBoundingBox structureBBIn, EnumFacing facing) {
         super(start, type);
         setCoordBaseMode(Rotation.CLOCKWISE_180.rotate(facing));
@@ -29,38 +63,11 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
         this.nbtPieceWeight = nbtPieceWeight;
 
         this.boundingBox = structureBBIn;
+    }
 
-        int xOffset = 0;
-        int zOffset = 0;
-
-        // Recenter BB for template rotation
-        switch (this.getCoordBaseMode()) {
-            case NORTH:
-                xOffset = this.nbtPieceWeight.xOffset;
-                zOffset = this.nbtPieceWeight.zOffset;
-                break;
-            case WEST:
-                xOffset = this.nbtPieceWeight.zOffset;
-                zOffset = this.nbtPieceWeight.xOffset;
-                break;
-            case SOUTH:
-                xOffset = -this.nbtPieceWeight.xOffset;
-                zOffset = -this.nbtPieceWeight.zOffset;
-                this.boundingBox.offset(0, 0, this.boundingBox.maxZ - structureBBIn.minZ);
-                break;
-            case EAST:
-                xOffset = -this.nbtPieceWeight.zOffset;
-                zOffset = -this.nbtPieceWeight.xOffset;
-                this.boundingBox.offset(this.boundingBox.maxX - structureBBIn.minX, 0, 0);
-                break;
-        }
-
-        // Blending config
-        this.boundingBox.offset(
-                xOffset,
-                0,
-                zOffset
-        );
+    @Override
+    protected int getAverageGroundLevel(World worldIn, StructureBoundingBox structurebb) {
+        return super.getAverageGroundLevel(worldIn, structurebb) + this.nbtPieceWeight.yOffset;
     }
 
     @Override
@@ -74,18 +81,11 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
             this.boundingBox.offset(0, averageGroundLvl - this.boundingBox.minY, 0);
         }
 
-        // Blending config
-        this.boundingBox.offset(
-                0,
-                this.nbtPieceWeight.yOffset,
-                0
-        );
-
-        BlockPos templatePosition = new BlockPos(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ);
-        if(IceAndFireForksUtil.isBlockInsideMausoleum(world, templatePosition)) {
+        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox)) {
             return true;
         }
 
+        BlockPos templatePosition = new BlockPos(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ);
         TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
 
         PlacementSettings placeSettings = (new PlacementSettings()).setReplacedBlock(Blocks.STRUCTURE_VOID).setBoundingBox(villageBB);

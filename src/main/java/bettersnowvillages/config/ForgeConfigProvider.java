@@ -4,9 +4,12 @@ import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.config.worldgen.ClassGenInfo;
 import bettersnowvillages.config.worldgen.NBTGenInfo;
 import bettersnowvillages.registry.BSVTrades;
+import bettersnowvillages.world.gen.structure.MapGenBetterSnowVillage;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
+import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
@@ -20,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class ForgeConfigProvider {
 
@@ -44,6 +48,21 @@ public class ForgeConfigProvider {
         return nbtGenInfo;
     }
 
+    public static void initConfig() {
+        initDynamicDefaults();
+
+        ForgeConfigProvider.defaultEnchantedRandomlyBookPool.clear();
+        Arrays.stream(ForgeConfigHandler.item.enchantedRandomlyEnchantments).forEach(config -> {
+            ResourceLocation enchID = new ResourceLocation(config.trim());
+            if(ForgeRegistries.ENCHANTMENTS.containsKey(enchID))
+                ForgeConfigProvider.defaultEnchantedRandomlyBookPool.add(ForgeRegistries.ENCHANTMENTS.getValue(enchID));
+        });
+
+        initSnowVillageBiomesConfig();
+        initSnowVillageComponentsConfig();
+    }
+
+    // Configs that resync
     public static void initDynamicDefaults() {
         boolean sync;
         // Read user modifications
@@ -53,14 +72,38 @@ public class ForgeConfigProvider {
         // Save
         if(sync)
             ConfigManager.sync(BetterSnowVillages.MODID, Config.Type.INSTANCE);
+    }
 
-        ForgeConfigProvider.defaultEnchantedRandomlyBookPool.clear();
-        Arrays.stream(ForgeConfigHandler.item.enchantedRandomlyEnchantments).forEach(config -> {
-            ResourceLocation enchID = new ResourceLocation(config.trim());
-            if(ForgeRegistries.ENCHANTMENTS.containsKey(enchID))
-                ForgeConfigProvider.defaultEnchantedRandomlyBookPool.add(ForgeRegistries.ENCHANTMENTS.getValue(enchID));
+    private static boolean shouldConfigCategoryReset(String savedVersion) {
+        return !savedVersion.isEmpty()
+                && !savedVersion.equals("custom")
+                && !savedVersion.equals(BetterSnowVillages.VERSION);
+    }
+
+    private static void initSnowVillageBiomesConfig() {
+        // Auto add Cold and Snowy biomes, matching Vanilla Ice and Fire
+        MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES.clear();
+        MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES.addAll(ForgeRegistries.BIOMES.getValuesCollection().stream()
+                .filter(biome -> MapGenBetterSnowVillage.isBiomeColdAndSnowy(BiomeDictionary.getTypes(biome)))
+                .collect(Collectors.toList())
+        );
+
+        // Additional
+        Arrays.stream(ForgeConfigHandler.betterSVGen.snowVillageBiomeAdditional).forEach(config -> {
+            Biome biome = ForgeRegistries.BIOMES.getValue(new ResourceLocation(config.trim()));
+            if(biome != null)
+                MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES.add(biome);
         });
 
+        // Blacklist
+        Arrays.stream(ForgeConfigHandler.betterSVGen.snowVillageBiomeBlacklist).forEach(config -> {
+            Biome biome = ForgeRegistries.BIOMES.getValue(new ResourceLocation(config.trim()));
+            if(biome != null)
+                MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES.remove(biome);
+        });
+    }
+
+    private static void initSnowVillageComponentsConfig() {
         ForgeConfigProvider.disabledSnowVillageComponentClassNames.clear();
         Arrays.stream(ForgeConfigHandler.betterSVGen.snowVillageComponents).forEach(config -> {
             String[] split = config.split(",");
@@ -142,12 +185,6 @@ public class ForgeConfigProvider {
                 }
             }
         });
-    }
-
-    private static boolean shouldConfigCategoryReset(String savedVersion) {
-        return !savedVersion.isEmpty()
-                && !savedVersion.equals("custom")
-                && !savedVersion.equals(BetterSnowVillages.VERSION);
     }
 
     private static boolean resetSnowVillageComponentsConfig() {

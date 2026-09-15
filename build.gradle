@@ -71,16 +71,19 @@ dependencies {
     fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
     fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
 
-    compileOnly fg.deobf("curse.maven:waystones-${waystones_version}")
+    implementation fg.deobf("curse.maven:waystones-${waystones_version}")
 
     runtimeOnly fg.deobf("curse.maven:shadowfacts-forgelin-${forgelin_version}")
     implementation fg.deobf("curse.maven:bountiful-${bountiful_version}")
 
     runtimeOnly fg.deobf("curse.maven:ivtoolkit-${ivtoolkit_version}")
-    compileOnly fg.deobf("curse.maven:recurrent-complex-${recurrentcomplex_version}")
+    implementation fg.deobf("curse.maven:recurrent-complex-${recurrentcomplex_version}")
 
-    compileOnly fg.deobf("curse.maven:quark-${quark_version}")
+    implementation fg.deobf("curse.maven:quark-${quark_version}")
     compileOnly fg.deobf("curse.maven:charm-${charm_version}")
+
+    compileOnly fg.deobf("curse.maven:antique-atlas-${antiqueatlas_version}")
+    compileOnly fg.deobf("curse.maven:antiqueatlasautomarker-${aaam_version}")
 }
 
 mixin {

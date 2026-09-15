@@ -1,6 +1,7 @@
 package bettersnowvillages.compat.bountiful.worldgen.worldgen;
 
 import bettersnowvillages.BetterSnowVillages;
+import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.compat.QuarkUtil;
 import com.github.alexthe666.iceandfire.world.village.SnowVillagePieces;
@@ -22,8 +23,10 @@ import java.util.Random;
 import java.util.Set;
 
 public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
-    public static final ResourceLocation VANILlA_BOARD_ID = new ResourceLocation(BetterSnowVillages.MODID, "snow_village_board_vanilla");
-    public static final ResourceLocation QUARK_BOARD_ID = new ResourceLocation(BetterSnowVillages.MODID, "snow_village_board_quark");
+    public static final ResourceLocation VANILlA_BOARD_ID = new ResourceLocation("bountiful", "village_board");
+    public static final ResourceLocation QUARK_BOARD_ID = new ResourceLocation("bountiful", "village_board");
+//    public static final ResourceLocation VANILlA_BOARD_ID = new ResourceLocation(BetterSnowVillages.MODID, "snow_village_board_vanilla");
+//    public static final ResourceLocation QUARK_BOARD_ID = new ResourceLocation(BetterSnowVillages.MODID, "snow_village_board_quark");
 
     public ComponentSnowVillageBountyBoard() {}
 
@@ -40,13 +43,19 @@ public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
 
     @Override
     public boolean addComponentParts(World world, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
-        if (averageGroundLvl < 0) {
-            averageGroundLvl = getAverageGroundLevel(world, structureBoundingBoxIn);
-            if (averageGroundLvl < 0) {
+        if (this.averageGroundLvl < 0) {
+            this.averageGroundLvl = this.getAverageGroundLevel(world, structureBoundingBoxIn);
+            if (this.averageGroundLvl < 0) {
                 return true;
             }
-            this.boundingBox.offset(0, averageGroundLvl - this.boundingBox.minY - 1, 0);
+            this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.minY - 1, 0); // For 3 x 3 x 3
+//            this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.minY, 0); // For 7 x 6 x 7
         }
+
+        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox)) {
+            return true;
+        }
+
         BlockPos pos = new BlockPos(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ);
         TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
         PlacementSettings settings = (new PlacementSettings()).setReplacedBlock(Blocks.STRUCTURE_VOID).setBoundingBox(structureBoundingBoxIn);
@@ -71,6 +80,7 @@ public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
                 structureMinX, structureMinY, structureMinZ,
                 0, 0, 0,
                 3, 3, 3,
+//                7, 6, 7,
                 facing
         );
         return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(structureComponentList, structureboundingbox) == null

@@ -3,6 +3,7 @@ package bettersnowvillages.config;
 import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.registry.BSVTrades;
+import bettersnowvillages.world.gen.BetterSnowVillagesChunkGenerator;
 import fermiumbooter.annotations.MixinConfig;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
@@ -68,13 +69,30 @@ public class ForgeConfigHandler {
 	@MixinConfig(name = BetterSnowVillages.MODID)
 	public static class BetterSnowVillageGenConfig {
 
+		@Config.Comment({
+				"Generator for Better Snow Villages:",
+				"WorldGenerator",
+				"\tBehavior more similar to Vanilla Ice and Fire Snow Villages",
+				"\tGeneration rate most influenced by chance per chunk",
+				"\tSafe to use Ice and Fire's generation config",
+				"MapGenStructure",
+				"\tBehavior more similar to Vanilla Minecraft Villages",
+				"\tGeneration rate most influenced by minimum distance between others",
+				"\tChance per chunk config is ignored in favor of compatibility with other features such as:",
+				"\t\tbettersnowvillages locate command",
+				"\t\tAntique Auto Atlas Marker's vanilla structure system"
+		})
+		@Config.Name("Better Snow Village Generator")
+		@Config.RequiresMcRestart
+		public BetterSnowVillages.SnowVillageGenerator betterSVGenerator = BetterSnowVillages.SnowVillageGenerator.MapGenStructure;
+
 		@Config.Comment("Should better snow villages generate using Vanilla generation")
 		@Config.Name("Generate Better Snow Villages")
 		public boolean genBetterSV = true;
 
 		@Config.Comment("Use vanilla Ice and Fire's config settings with the exception of the better snow village generation toggle")
 		@Config.Name("Generate Better Snow Villages With Vanilla Config")
-		public boolean useIFConfig = true;
+		public boolean useIFConfig = false;
 
 		@Config.Comment("Chance to generate snow villages per chunk, 1 in N chance")
 		@Config.Name("Generate Better Snow Villages Chance")
@@ -92,7 +110,7 @@ public class ForgeConfigHandler {
 		@Config.Comment("How far apart snow villages should spawn apart from each other")
 		@Config.Name("Better Snow Village Minimum Distance")
 		@Config.RangeInt(min = 0)
-		public int betterSVMinDist = 300;
+		public int betterSVMinDist = 512;
 
 		@Config.Comment("Modifies Bountiful mod's Bounty Board to generate snow and ice variations in cold and snowy tagged biomes.")
 		@Config.Name("Mixin: Snowy Bounty Board (Bountiful)")
@@ -117,6 +135,25 @@ public class ForgeConfigHandler {
 		)
 		@Config.RequiresMcRestart
 		public boolean genBetterWaystone = true;
+
+		@Config.Comment({
+				"List of Biome that Better Snow Villages will generate in.",
+				"These are additional biomes alongside biomes that are both Cold and Snowy."
+		})
+		@Config.Name("Better Snow Village Biomes Additional")
+		public String[] snowVillageBiomeAdditional = {
+
+		};
+
+		@Config.Comment({
+				"List of Biome that Better Snow Villages will not generate in.",
+				"These remove any biomes automatically added for being both Cold and Snowy."
+		})
+		@Config.Name("Better Snow Village Biomes Blacklist")
+		public String[] snowVillageBiomeBlacklist = {
+				"minecraft:cold_beach",
+				"minecraft:frozen_river"
+		};
 
 		@Config.Comment({
 				"List of Village Components Classes that will generate in Better Snow Villages.",
@@ -168,10 +205,11 @@ public class ForgeConfigHandler {
 		@Config.Name("Better Snow Village Vanilla Components")
 		public String[] snowVillageComponents = {
 				"com.github.alexthe666.iceandfire.world.village.ComponentAnimalFarm, true",
+				"com.github.alexthe666.iceandfire.world.village.ComponentScriberHouse, false",
 				"ejektaflex.bountiful.worldgen.VillageBoardComponent, true",
 				"net.blay09.mods.waystones.worldgen.ComponentVillageWaystone, true",
 				"ivorius.reccomplex.dynamic.vanillagen.VillageMarketplace_vanilla_85673491, true",
-				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SnowVillageMarketplace_vanilla_5b8ff36c, false",
+				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SnowVillageMarketplace_vanilla_5b8ff36c, true",
 				"ivorius.reccomplex.dynamic.vanillagen.BetterSnowVillages_SnowVillageBigIgloo_vanilla_425355a4, false",
 
 				"ivorius.reccomplex.dynamic.vanillagen.VillageChurch_vanilla_85673491, false",
@@ -206,7 +244,20 @@ public class ForgeConfigHandler {
 		};
 	}
 
+	@MixinConfig(name = BetterSnowVillages.MODID)
 	public static class BaseSnowVillageGenConfig {
+
+		@Config.Comment("Fixes Ice and Fire never generating auto markers despite \"SnowVillageStart\" having a configurable structure marker.")
+		@Config.Name("Mod Compat: Antique Auto Atlas Marker")
+		@MixinConfig.MixinToggle(lateMixin = "mixins.bettersnowvillages.iceandfire.aaam.json", defaultValue = true)
+		@MixinConfig.CompatHandling(
+				modid = ModLoadedUtil.AAAM_MODID,
+				desired = true,
+				reason = "Mod needed for this Mixin to properly work",
+				warnIngame = false
+		)
+		@Config.RequiresMcRestart
+		public boolean baseAAAM = true;
 
 		@Config.Comment("Adds Bountiful mod's Bounty Board to the vanilla Ice and Fire Snow Villages.")
 		@Config.Name("Mod Compat: Bountiful Bounty Board")
@@ -349,7 +400,13 @@ public class ForgeConfigHandler {
 			if(event.getModID().equals(BetterSnowVillages.MODID)) {
 				ConfigManager.sync(BetterSnowVillages.MODID, Config.Type.INSTANCE);
 
-				ForgeConfigProvider.initDynamicDefaults();
+				BetterSnowVillagesChunkGenerator.BETTER_SNOW_VILLAGE.onConfigRefresh();
+
+				ForgeConfigProvider.initConfig();
+			}
+
+			if(event.getModID().equals(ModLoadedUtil.ICEANDFIRE_MODID)) {
+				BetterSnowVillagesChunkGenerator.BETTER_SNOW_VILLAGE.onConfigRefresh();
 			}
 		}
 	}

@@ -28,6 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeProvider;
+import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
@@ -39,13 +40,19 @@ import java.util.Random;
 
 public class BetterSnowVillagePieces {
 
+    public static void registerVillageComponents() {
+        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWell.class, BetterSnowVillages.MODID + ":BSVWell");
+        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowPath.class, BetterSnowVillages.MODID + ":BSVPath");
+        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.ExtraTorch.class, BetterSnowVillages.MODID + ":BSVLamp");
+        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWoodHut.class, BetterSnowVillages.MODID + ":BSVWoodHut");
+        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowHouse3.class, BetterSnowVillages.MODID + ":BSVHouse3");
+        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowHouse4.class, BetterSnowVillages.MODID + ":BSVHouse4");
+        MapGenStructureIO.registerStructureComponent(VillageNBTComponent.class, BetterSnowVillages.MODID + ":BSVNBT");
+    }
+
     public static void registerVillagePieces() {
-//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWell.class, "BSViW");
-//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowPath.class, "BSViSR");
-//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.ExtraTorch.class, "BSViL");
-//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowWoodHut.class, "BSViSmH");
-//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowHouse3.class, "BSViTRH");
-//        MapGenStructureIO.registerStructureComponent(BetterSnowVillagePieces.SnowHouse4.class, "BSViSH");
+        // Not functional using WorldGenerator, but required to register for AAAM
+        MapGenStructureIO.registerStructure(MapGenBetterSnowVillage.Start.class, BetterSnowVillages.MODID + ":SnowVillage");
 
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowWellCreationHandler());
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowPathCreationHandler());
@@ -53,8 +60,7 @@ public class BetterSnowVillagePieces {
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowWoodHutCreationHandler());
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowHouse3CreationHandler());
         VillagerRegistry.instance().registerVillageCreationHandler(new VillageSnowHouse4CreationHandler());
-
-        VillagerRegistry.instance().registerVillageCreationHandler(new VillageNBTCreationHandler()); // Prevent a crash if mixin fails
+        VillagerRegistry.instance().registerVillageCreationHandler(new VillageNBTCreationHandler());
     }
 
     public static List<StructureVillagePieces.PieceWeight> getStructureVillageWeightedPieceList(Random random, int size) {
@@ -396,7 +402,7 @@ public class BetterSnowVillagePieces {
 
         @Override
         protected IBlockState getBiomeSpecificBlockState(IBlockState blockstateIn) {
-            blockstateIn = WorldGenBetterSnowVillage.getBasicSnowyPalletSwap(blockstateIn);
+            blockstateIn = MapGenBetterSnowVillage.getBasicSnowyPalletSwap(blockstateIn);
             return super.getBiomeSpecificBlockState(blockstateIn);
         }
 
@@ -530,7 +536,7 @@ public class BetterSnowVillagePieces {
 
         @Override
         protected IBlockState getBiomeSpecificBlockState(IBlockState blockstateIn) {
-            blockstateIn = WorldGenBetterSnowVillage.getBasicSnowyPalletSwap(blockstateIn);
+            blockstateIn = MapGenBetterSnowVillage.getBasicSnowyPalletSwap(blockstateIn);
             return super.getBiomeSpecificBlockState(blockstateIn);
         }
 

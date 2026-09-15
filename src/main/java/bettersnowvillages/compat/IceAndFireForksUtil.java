@@ -10,6 +10,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityZombieVillager;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.StructureBoundingBox;
 
 public class IceAndFireForksUtil {
 
@@ -25,19 +26,36 @@ public class IceAndFireForksUtil {
         return isModernRegistry;
     }
 
+    public static boolean getMausoleumAntiGrief() {
+        if(mausoleumAntiGrief == null) {
+            mausoleumAntiGrief = ModLoadedUtil.ICEANDFIRE.fork == ModLoadedUtil.INFLoadedContainer.FORK.RLCRAFT
+                    && ModLoadedUtil.versionInRange(ModLoadedUtil.ICEANDFIRE, "[2.1.0,)");
+        }
+        return false;
+    }
+
     // Was going to make it a dread mob but that still laggy af
     public static EntityLiving getInfestedSnowVillageMob(World world) {
         return new EntityZombieVillager(world);
     }
 
-    public static boolean isBlockInsideMausoleum(World world, BlockPos pos) {
-        if (ModLoadedUtil.ICEANDFIRE.fork == ModLoadedUtil.INFLoadedContainer.FORK.RLCRAFT) {
-            if(mausoleumAntiGrief == null) {
-                mausoleumAntiGrief = ModLoadedUtil.versionInRange(ModLoadedUtil.ICEANDFIRE, "[2.1.0,)");
+    public static boolean isStructureInsideMausoleum(World world, StructureBoundingBox boundingBox) {
+        if(getMausoleumAntiGrief()) {
+            for(int x : new int[]{ boundingBox.minX, boundingBox.maxX }) {
+                for(int z : new int[]{ boundingBox.minZ, boundingBox.maxZ }) {
+                    for(int y : new int[]{ boundingBox.minY, boundingBox.maxY }) {
+                        if(IceAndFireForksUtil.isBlockInsideMausoleum(world, new BlockPos(x, y, z))) {
+                            return true;
+                        }
+                    }
+                }
             }
-            return mausoleumAntiGrief && INFRLCHandler.isBlockInsideMausoleum(world, pos);
         }
         return false;
+    }
+
+    public static boolean isBlockInsideMausoleum(World world, BlockPos pos) {
+        return getMausoleumAntiGrief() && INFRLCHandler.isBlockInsideMausoleum(world, pos);
     }
 
     public static boolean getSnowVillageGenConfig(boolean useVanillaIF) {
@@ -99,11 +117,8 @@ public class IceAndFireForksUtil {
             if (ModLoadedUtil.ICEANDFIRE.fork == ModLoadedUtil.INFLoadedContainer.FORK.RLCRAFT) {
                 return INFRLCHandler.getSnowVillageMinimumDistance();
             }
-            return 0;
         }
-        else {
-            return ForgeConfigHandler.betterSVGen.betterSVMinDist;
-        }
+        return ForgeConfigHandler.betterSVGen.betterSVMinDist;
     }
 
     public static Block getFrozenCobblestone() {

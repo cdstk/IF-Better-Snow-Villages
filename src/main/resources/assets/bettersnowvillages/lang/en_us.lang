@@ -2,3 +2,6 @@ item.bettersnowvillages.enchanted_randomly_book.name=Random Single Enchantment B
 item.bettersnowvillages.enchanted_with_levels_book.name=Random Enchanted Book
 item.bettersnowvillages.enchanted_with_levels_book_treasure.name=Random Treasure Enchanted Book
 item.bettersnowvillages.with_levels.tooltip=With levels: %d
+
+commands.bettersnowvillages.invalidusage=Invalid arguments.
+commands.bettersnowvillages.notmapgenstructure=MapGenStructure is not enabled.

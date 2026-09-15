@@ -8,6 +8,7 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
 // Nischhelm Style
 public class ModLoadedUtil {
 
+    public static final String AAAM_MODID = "antiqueatlasautomarker";
     public static final String BOUNTIFUL_MODID = "bountiful";
     public static final String CHARM_MODID = "charm";
     public static final String ICEANDFIRE_MODID = "iceandfire";
@@ -15,6 +16,7 @@ public class ModLoadedUtil {
 //    public static final String RECURRENTCOMPLEX_MODID = "reccomplex";
     public static final String WAYSTONES_MODID = "waystones";
 
+    public static LoadedContainer AAAM = new LoadedContainer(AAAM_MODID);
     public static LoadedContainer BOUNTIFUL = new LoadedContainer(BOUNTIFUL_MODID);
     public static LoadedContainer CHARM = new LoadedContainer(CHARM_MODID);
     public static INFLoadedContainer ICEANDFIRE = new INFLoadedContainer(ICEANDFIRE_MODID);

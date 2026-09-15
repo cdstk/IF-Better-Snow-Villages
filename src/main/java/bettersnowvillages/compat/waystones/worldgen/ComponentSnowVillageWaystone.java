@@ -1,6 +1,7 @@
 package bettersnowvillages.compat.waystones.worldgen;
 
 import bettersnowvillages.BetterSnowVillages;
+import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.compat.QuarkUtil;
 import com.github.alexthe666.iceandfire.world.village.SnowVillagePieces;
@@ -52,6 +53,11 @@ public class ComponentSnowVillageWaystone extends SnowVillagePieces.Village {
 
             this.boundingBox.offset(0, averageGroundLvl - this.boundingBox.minY, 0);
         }
+
+        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox)) {
+            return true;
+        }
+
         BlockPos pos = new BlockPos(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ);
         TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
         PlacementSettings settings = (new PlacementSettings()).setReplacedBlock(Blocks.STRUCTURE_VOID).setBoundingBox(structureBoundingBoxIn);
