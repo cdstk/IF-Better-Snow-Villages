@@ -3,6 +3,7 @@ package bettersnowvillages.mixin.bountiful;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.compat.QuarkUtil;
 import bettersnowvillages.compat.bountiful.worldgen.worldgen.ComponentSnowVillageBountyBoard;
+import bettersnowvillages.mixin.vanilla.StructureVillagePieces$Village_AccessorMixin;
 import bettersnowvillages.world.gen.structure.MapGenBetterSnowVillage;
 import com.llamalad7.mixinextras.sugar.Local;
 import ejektaflex.bountiful.worldgen.VillageBoardComponent;
@@ -25,7 +26,11 @@ public abstract class VillageBoardComponent_SnowMixin {
             index = 1
     )
     private ResourceLocation betterSnowVillages$bountifulVillageBoardComponent_addComponentPartsSnow(ResourceLocation id, @Local(argsOnly = true) World world, @Local BlockPos pos){
-        if(world.getBiomeProvider().areBiomesViable(pos.getX(), pos.getZ(), 0, MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES)) { // Can't do snow well check bc idk how to kotlin mixin
+        boolean isSnowVillage = false;
+        if(this instanceof StructureVillagePieces$Village_AccessorMixin) { // BC idk Kotlin Mixin
+            isSnowVillage = MapGenBetterSnowVillage.isComponentOfSnowVillage(((StructureVillagePieces$Village_AccessorMixin) this).betterSnowVillages$accessorStartPiece());
+        }
+        if(isSnowVillage && world.getBiomeProvider().areBiomesViable(pos.getX(), pos.getZ(), 0, MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES)) {
             if (ModLoadedUtil.QUARK.isLoaded() && QuarkUtil.isSnowBrickEnabled()) {
                 Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(world.getBiome(pos));
                 return types.contains(BiomeDictionary.Type.FOREST)
