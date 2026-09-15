@@ -82,18 +82,23 @@ public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
             return true;
         }
 
-        IBlockState pathState = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
-        IBlockState planksState = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE));
-        IBlockState gravelState = this.getBiomeSpecificBlockState(Blocks.GRAVEL.getDefaultState());
-        IBlockState cobbleState = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
         BlockPos pos = new BlockPos(this.boundingBox.minX, this.boundingBox.minY, this.boundingBox.minZ);
         TemplateManager templateManager = world.getSaveHandler().getStructureTemplateManager();
         PlacementSettings settings = (new PlacementSettings()).setReplacedBlock(Blocks.STRUCTURE_VOID).setBoundingBox(structureBoundingBoxIn).setRotation(this.boardRotation)  ;
-        VillageBoardProcessor processor = new VillageBoardProcessor(pos, settings, pathState, planksState, gravelState, cobbleState);
 
         Template template = templateManager.getTemplate(world.getMinecraftServer(), this.getTemplateResourceLocation(world, pos));
 
-        template.addBlocksToWorld(world, pos.add(this.boardShift), processor, settings, 2);
+        if(ModLoadedUtil.versionInRange(ModLoadedUtil.BOUNTIFUL, "[2.2.3,)")) {
+            IBlockState pathState = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
+            IBlockState planksState = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE));
+            IBlockState gravelState = this.getBiomeSpecificBlockState(Blocks.GRAVEL.getDefaultState());
+            IBlockState cobbleState = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
+            VillageBoardProcessor processor = new VillageBoardProcessor(pos, settings, pathState, planksState, gravelState, cobbleState);
+            template.addBlocksToWorld(world, pos.add(this.boardShift), processor, settings, 2);
+        }
+        else {
+            template.addBlocksToWorld(world, pos.add(this.boardShift), settings);
+        }
         return true;
     }
 
