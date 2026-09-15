@@ -88,7 +88,7 @@ public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
 
         Template template = templateManager.getTemplate(world.getMinecraftServer(), this.getTemplateResourceLocation(world, pos));
 
-        if(ModLoadedUtil.versionInRange(ModLoadedUtil.BOUNTIFUL, "[2.2.3,)")) {
+        if(ModLoadedUtil.versionInRange(ModLoadedUtil.BOUNTIFUL, ModLoadedUtil.BOUNTIFUL_LATEST)) {
             IBlockState pathState = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
             IBlockState planksState = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE));
             IBlockState gravelState = this.getBiomeSpecificBlockState(Blocks.GRAVEL.getDefaultState());

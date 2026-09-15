@@ -16,6 +16,9 @@ public class ModLoadedUtil {
 //    public static final String RECURRENTCOMPLEX_MODID = "reccomplex";
     public static final String WAYSTONES_MODID = "waystones";
 
+    public static final String BOUNTIFUL_BEFORELATEST = "[,2.2.3)";
+    public static final String BOUNTIFUL_LATEST = "[2.2.3,)";
+
     public static LoadedContainer AAAM = new LoadedContainer(AAAM_MODID);
     public static LoadedContainer BOUNTIFUL = new LoadedContainer(BOUNTIFUL_MODID);
     public static LoadedContainer CHARM = new LoadedContainer(CHARM_MODID);

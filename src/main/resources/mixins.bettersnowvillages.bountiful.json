@@ -6,6 +6,7 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8",
   "mixins": [
+    "bountiful.VillageBoardComponent$Companion_SnowMixin",
     "bountiful.VillageBoardComponent_SnowMixin"
   ],
   "injectors": {

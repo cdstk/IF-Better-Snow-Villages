@@ -2,6 +2,7 @@ package bettersnowvillages.compat.charm;
 
 import bettersnowvillages.compat.IceAndFireForksUtil;
 import net.minecraft.block.BlockFence;
+import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockSnowBlock;
 import net.minecraft.block.BlockStairs;
@@ -37,7 +38,11 @@ public class SnowVillageErosion extends Erosion {
             // Cobble to Frozen Cobble
             // Plank -> Snow
             // Log -> Packed Ice
-            if (state.getBlock() instanceof BlockSnowBlock || state.getBlock() instanceof BlockStairs || state.getBlock() instanceof BlockFence) {
+            if (state.getBlock() instanceof BlockSnowBlock
+                    || state.getBlock() instanceof BlockPlanks
+                    || state.getBlock() instanceof BlockStairs
+                    || state.getBlock() instanceof BlockFence)
+            {
                 if (this.rand.nextFloat() < 0.92F) {
                     newState = Blocks.AIR.getDefaultState();
                 } else {
@@ -49,9 +54,17 @@ public class SnowVillageErosion extends Erosion {
                 newState = Blocks.AIR.getDefaultState();
             }
 
-            if (state.getBlock() == IceAndFireForksUtil.getFrozenCobblestone()) {
+            if (state.getBlock() == Blocks.COBBLESTONE) {
                 if (this.rand.nextFloat() < 0.5F) {
-                    newState = Blocks.MOSSY_COBBLESTONE.getDefaultState();
+                    newState = IceAndFireForksUtil.getFrozenCobblestone().getDefaultState();
+                } else {
+                    newState = IceAndFireForksUtil.getFrozenGravel().getDefaultState();
+                }
+            }
+
+            if (state.getBlock() == IceAndFireForksUtil.getFrozenCobblestone() || newState == IceAndFireForksUtil.getFrozenCobblestone().getDefaultState()) {
+                if (this.rand.nextFloat() < 0.5F) {
+                    newState = IceAndFireForksUtil.getDragonIceSpikes().getDefaultState();
                 } else {
                     newState = IceAndFireForksUtil.getFrozenGravel().getDefaultState();
                 }
