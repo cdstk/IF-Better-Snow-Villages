@@ -1,4 +1,4 @@
-package bettersnowvillages.compat.bountiful.worldgen.worldgen;
+package bettersnowvillages.compat.bountiful.worldgen;
 
 import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.compat.IceAndFireForksUtil;

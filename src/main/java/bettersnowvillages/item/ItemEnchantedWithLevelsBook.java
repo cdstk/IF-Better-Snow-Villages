@@ -30,16 +30,20 @@ public class ItemEnchantedWithLevelsBook extends ItemUnknownEnchantedBook {
 
     public void spawnEnchantedBook(ItemStack stack, World worldIn, EntityLivingBase entityIn, int itemSlot, boolean isSelected) {
         ItemStack bookStack = new ItemStack(Items.BOOK);
-        int withLevels = this.getDamage(stack);
-        IAttributeInstance luck = entityIn.getEntityAttribute(SharedMonsterAttributes.LUCK);
-        if(luck != null) withLevels += (int) (luck.getAttributeValue() * ForgeConfigHandler.item.enchantedWithLevelsLuck);
 
-        bookStack = EnchantmentHelper.addRandomEnchantment(
-                entityIn.getRNG(),
-                bookStack,
-                withLevels,
-                this.isTreasure
-        );
+        if(!worldIn.isRemote) {
+            int withLevels = this.getDamage(stack);
+            IAttributeInstance luck = entityIn.getEntityAttribute(SharedMonsterAttributes.LUCK);
+            if(luck != null) withLevels += (int) (luck.getAttributeValue() * ForgeConfigHandler.item.enchantedWithLevelsLuck);
+
+            bookStack = EnchantmentHelper.addRandomEnchantment(
+                    entityIn.getRNG(),
+                    bookStack,
+                    withLevels,
+                    this.isTreasure
+            );
+        }
+
         entityIn.replaceItemInInventory(itemSlot, bookStack);
     }
 

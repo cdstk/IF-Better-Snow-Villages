@@ -64,7 +64,6 @@ public class ModLoadedUtil {
         }
 
         public final FORK fork;
-        private Boolean isLightingFork = null;
         private INFLoadedContainer(String key) {
             super(key);
             if(this.isLoaded()) {
@@ -83,17 +82,5 @@ public class ModLoadedUtil {
                 this.fork = FORK.BASE;
             }
         }
-//        // Based on RLCombat's check
-//        public boolean isLightningFork(){
-//            if(isLightingFork == null) {
-//                isLightingFork = false;
-//                String[] arrOfStr = Loader.instance().getIndexedModList().get("iceandfire").getVersion().split("\\.");
-//                try {
-//                    int i = Integer.parseInt(String.valueOf(arrOfStr[0]));
-//                    if (i >= 2) isLightingFork = true;
-//                } catch (Exception ignored) {}
-//            }
-//            return isLightingFork;
-//        }
     }
 }

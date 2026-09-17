@@ -2,7 +2,7 @@ package bettersnowvillages.mixin.bountiful;
 
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.compat.QuarkUtil;
-import bettersnowvillages.compat.bountiful.worldgen.worldgen.ComponentSnowVillageBountyBoard;
+import bettersnowvillages.compat.bountiful.worldgen.ComponentSnowVillageBountyBoard;
 import bettersnowvillages.mixin.vanilla.StructureVillagePieces$Village_AccessorMixin;
 import bettersnowvillages.world.gen.structure.MapGenBetterSnowVillage;
 import com.llamalad7.mixinextras.sugar.Local;

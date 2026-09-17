@@ -3,7 +3,7 @@ package bettersnowvillages.mixin.iceandfire;
 import bettersnowvillages.compat.BountifulUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.compat.WaystonesUtil;
-import bettersnowvillages.compat.bountiful.worldgen.worldgen.ComponentSnowVillageBountyBoard;
+import bettersnowvillages.compat.bountiful.worldgen.ComponentSnowVillageBountyBoard;
 import bettersnowvillages.compat.waystones.worldgen.ComponentSnowVillageWaystone;
 import bettersnowvillages.config.ForgeConfigHandler;
 import com.github.alexthe666.iceandfire.world.village.SnowVillagePieces;
@@ -33,7 +33,7 @@ public abstract class SnowVillagePieces_AddonMixin {
             list.add(new SnowVillagePieces.PieceWeight(
                     ComponentSnowVillageBountyBoard.class,
                     3,
-                    random.nextFloat() <= 0.73f && BountifulUtil.getVillageGenerationConfig()
+                    random.nextFloat() <= BountifulUtil.getVillageGenerationChance() && BountifulUtil.getVillageGenerationConfig()
                             ? 1
                             : 0
             ));

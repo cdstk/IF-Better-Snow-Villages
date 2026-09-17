@@ -25,38 +25,42 @@ public class ItemEnchantedRandomlyBook extends ItemUnknownEnchantedBook {
 
     public void spawnEnchantedBook(ItemStack stack, World worldIn, EntityLivingBase entityIn, int itemSlot, boolean isSelected) {
         ItemStack bookStack = new ItemStack(Items.ENCHANTED_BOOK);
-        Random rand = entityIn.getRNG();
-        List<Enchantment> configEnchantments = ForgeConfigProvider.getDefaultEnchantedRandomlyBookPool();
-        Enchantment enchantment = null;
 
-        // Whitelist behavior
-        if(ForgeConfigHandler.item.enchantedRandomlyWhitelist && !configEnchantments.isEmpty()) {
-            enchantment = configEnchantments.get(rand.nextInt(configEnchantments.size()));
-        }
-        else {
-            List<Enchantment> possible = new ArrayList<>(ForgeRegistries.ENCHANTMENTS.getValuesCollection());
-            if(!possible.isEmpty()) {
-                // Empty list behavior
-                if (configEnchantments.isEmpty()) {
-                    enchantment = possible.get(rand.nextInt(possible.size()));
-                }
-                // Blacklist behavior
-                else {
-                    possible.removeAll(configEnchantments);
-                    enchantment = possible.get(rand.nextInt(possible.size()));
+        if(!worldIn.isRemote) {
+            Random rand = entityIn.getRNG();
+            List<Enchantment> configEnchantments = ForgeConfigProvider.getDefaultEnchantedRandomlyBookPool();
+            Enchantment enchantment = null;
+
+            // Whitelist behavior
+            if(ForgeConfigHandler.item.enchantedRandomlyWhitelist && !configEnchantments.isEmpty()) {
+                enchantment = configEnchantments.get(rand.nextInt(configEnchantments.size()));
+            }
+            else {
+                List<Enchantment> possible = new ArrayList<>(ForgeRegistries.ENCHANTMENTS.getValuesCollection());
+                if(!possible.isEmpty()) {
+                    // Empty list behavior
+                    if (configEnchantments.isEmpty()) {
+                        enchantment = possible.get(rand.nextInt(possible.size()));
+                    }
+                    // Blacklist behavior
+                    else {
+                        possible.removeAll(configEnchantments);
+                        enchantment = possible.get(rand.nextInt(possible.size()));
+                    }
                 }
             }
+
+            if(enchantment == null)
+                return;
+
+            ItemEnchantedBook.addEnchantment(
+                    bookStack,
+                    new EnchantmentData(
+                            enchantment,
+                            MathHelper.getInt(rand, enchantment.getMinLevel(), enchantment.getMaxLevel()))
+            );
         }
 
-        if(enchantment == null)
-            return;
-
-        ItemEnchantedBook.addEnchantment(
-                bookStack,
-                new EnchantmentData(
-                        enchantment,
-                        MathHelper.getInt(rand, enchantment.getMinLevel(), enchantment.getMaxLevel()))
-        );
         entityIn.replaceItemInInventory(itemSlot, bookStack);
     }
 }
