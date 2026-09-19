@@ -66,11 +66,14 @@ public class BetterSnowVillagePieces {
     public static List<StructureVillagePieces.PieceWeight> getStructureVillageWeightedPieceList(Random random, int size) {
         List<StructureVillagePieces.PieceWeight> list = Lists.newArrayList();
 
+        VillagerRegistry.addExtraVillageComponents(list, random, size);
+        ForgeConfigProvider.removeDisabledSnowVillageComponents(list);
+
         ForgeConfigProvider.getSVClassGen().forEach((clazz, coreGenInfo) -> {
             int randomCount;
             if(coreGenInfo.min < 0) {
                 randomCount = MathHelper.getInt(random, size, coreGenInfo.max + size - coreGenInfo.min);
-                randomCount = MathHelper.clamp(randomCount + coreGenInfo.min, 0, coreGenInfo.max);
+                randomCount = Math.max(randomCount + coreGenInfo.min, 0);
             }
             else {
                 randomCount = MathHelper.getInt(random, coreGenInfo.min + size, coreGenInfo.max + size);
@@ -82,7 +85,7 @@ public class BetterSnowVillagePieces {
             int randomCount;
             if(nbtGenInfo.min < 0) {
                 randomCount = MathHelper.getInt(random, size, nbtGenInfo.max + size - nbtGenInfo.min);
-                randomCount = MathHelper.clamp(randomCount + nbtGenInfo.min, 0, nbtGenInfo.max);
+                randomCount = Math.max(randomCount + nbtGenInfo.min, 0);
             }
             else {
                 randomCount = MathHelper.getInt(random, nbtGenInfo.min + size, nbtGenInfo.max + size);
@@ -93,10 +96,7 @@ public class BetterSnowVillagePieces {
             );
         });
 
-        VillagerRegistry.addExtraVillageComponents(list, random, size);
-
         list.removeIf(pieceWeight -> (pieceWeight).villagePiecesLimit == 0);
-        ForgeConfigProvider.removeDisabledSnowVillageComponents(list);
 
         return list;
     }
