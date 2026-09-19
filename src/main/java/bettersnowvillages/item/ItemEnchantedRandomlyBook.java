@@ -50,15 +50,13 @@ public class ItemEnchantedRandomlyBook extends ItemUnknownEnchantedBook {
                 }
             }
 
-            if(enchantment == null)
-                return;
-
-            ItemEnchantedBook.addEnchantment(
+            if(enchantment != null)
+                ItemEnchantedBook.addEnchantment(
                     bookStack,
                     new EnchantmentData(
                             enchantment,
                             MathHelper.getInt(rand, enchantment.getMinLevel(), enchantment.getMaxLevel()))
-            );
+                );
         }
 
         entityIn.replaceItemInInventory(itemSlot, bookStack);
