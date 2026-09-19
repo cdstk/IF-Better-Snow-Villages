@@ -209,9 +209,9 @@ public class BetterSnowVillagePieces {
         @Override
         public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
             IBlockState commonPathBlock = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
-            IBlockState aquaticPathBlock = this.getBiomeSpecificBlockState(Blocks.PLANKS.getDefaultState());
-            IBlockState sandyPathBlock = this.getBiomeSpecificBlockState(Blocks.GRAVEL.getDefaultState());
-            IBlockState sandySupportBlock = this.getBiomeSpecificBlockState(Blocks.COBBLESTONE.getDefaultState());
+            IBlockState aquaticPathBlock = this.getBiomeSpecificBlockState(Blocks.PACKED_ICE.getDefaultState());
+            IBlockState sandyPathBlock = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenGrassPath().getDefaultState());
+            IBlockState sandySupportBlock = this.getBiomeSpecificBlockState(IceAndFireForksUtil.getFrozenCobblestone().getDefaultState());
 
             for (int i = this.boundingBox.minX; i <= this.boundingBox.maxX; ++i) {
                 for (int j = this.boundingBox.minZ; j <= this.boundingBox.maxZ; ++j) {

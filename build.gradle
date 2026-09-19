@@ -16,9 +16,7 @@ minecraft {
     mappings channel: mappings_channel, version: mappings_version
 
     runs {
-        client {
-            args "--username=InDev"
-
+        server {
             jvmArg "-Dfml.coreMods.load=${mixin_loader_class}"
             jvmArg "-Dmixin.hotSwap=true"
             jvmArg "-Dmixin.checks.interfaces=true"
@@ -30,17 +28,22 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
         }
 
-        server {
+        client {
+            parent minecraft.runs.server
 
-            jvmArg "-Dfml.coreMods.load=${mixin_loader_class}"
-            jvmArg "-Dmixin.hotSwap=true"
-            jvmArg "-Dmixin.checks.interfaces=true"
-            jvmArg "-Dmixin.debug.export=true"
+            args "--username=InDev"
+        }
 
-            workingDirectory project.file('run')
+        clientOptionalMods {
+            parent minecraft.runs.client
 
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
-            property 'forge.logging.console.level', 'debug'
+            workingDirectory project.file('runPack')
+        }
+
+        serverOptionalMods {
+            parent minecraft.runs.server
+
+            workingDirectory project.file('runPack')
         }
     }
 }
@@ -50,6 +53,23 @@ repositories {
     maven { url = 'https://www.cursemaven.com' }
 //    maven { url 'https://jitpack.io' }
 }
+
+def runOptionalMods = gradle.startParameter.taskNames.any { it.startsWith('run') && it.endsWith('OptionalMods')}
+def optionalRuntime = [
+        "curse.maven:autoreglib-${autoreglib_version}",
+        "curse.maven:shadowfacts-forgelin-${forgelin_version}",
+        "curse.maven:ivtoolkit-${ivtoolkit_version}"
+]
+def optionalImplementation = [
+        "curse.maven:antique-atlas-${antiqueatlas_version}",
+        "curse.maven:antiqueatlasautomarker-${aaam_version}",
+        "curse.maven:bountiful-${bountiful_version}",
+        "curse.maven:charm-${charm_version}",
+        "curse.maven:quark-${quark_version}",
+        "curse.maven:recurrent-complex-${recurrentcomplex_version}",
+        "curse.maven:waystones-${waystones_version}"
+]
+
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
@@ -71,20 +91,13 @@ dependencies {
     fg.deobf("curse.maven:ice-and-fire-rotn-edition-${iceandfirerotn_version}")
     fg.deobf("curse.maven:ice-and-fire-dragons-${iceandfire_version}")
 
-    implementation fg.deobf("curse.maven:waystones-${waystones_version}")
-
-    runtimeOnly fg.deobf("curse.maven:shadowfacts-forgelin-${forgelin_version}")
-    implementation fg.deobf("curse.maven:bountiful-${bountiful_version}")
-
-    runtimeOnly fg.deobf("curse.maven:ivtoolkit-${ivtoolkit_version}")
-    implementation fg.deobf("curse.maven:recurrent-complex-${recurrentcomplex_version}")
-
-    runtimeOnly fg.deobf("curse.maven:autoreglib-${autoreglib_version}")
-    implementation fg.deobf("curse.maven:quark-${quark_version}")
-    compileOnly fg.deobf("curse.maven:charm-${charm_version}")
-
-    compileOnly fg.deobf("curse.maven:antique-atlas-${antiqueatlas_version}")
-    compileOnly fg.deobf("curse.maven:antiqueatlasautomarker-${aaam_version}")
+    optionalRuntime.each { dep ->
+        if (runOptionalMods) runtimeOnly fg.deobf(dep)
+    }
+    optionalImplementation.each { dep ->
+        if (runOptionalMods) implementation fg.deobf(dep)
+        else compileOnly fg.deobf(dep)
+    }
 }
 
 mixin {
@@ -144,7 +157,8 @@ tasks.register("copyReobfJar", Copy) {
     dependsOn("reobfJar")
 
     from(layout.buildDirectory.file("reobfJar/output.jar"))
-    into(layout.projectDirectory.dir("run/mods"))
+    if (runOptionalMods) into(layout.projectDirectory.dir("runPack/mods"))
+    else into(layout.projectDirectory.dir("run/mods"))
     rename("output.jar", "${mod_name}-${mod_version}.jar")
 }
 
