@@ -24,12 +24,12 @@ public class INFRLCHandler {
     public static int[] getSnowVillageDimBlacklistConfig() {
         return IceAndFireConfig.WORLDGEN.snowVillageWhitelist
                 ? IceAndFireForksUtil.EMPTY_ARRAY
-                : ForgeConfigHandler.betterSVGen.betterSVBlacklistedDimensions;
+                : IceAndFireConfig.WORLDGEN.snowVillageBlacklistedDimensions;
     }
 
     public static int[] getSnowVillageDimWhitelistConfig() {
         return IceAndFireConfig.WORLDGEN.snowVillageWhitelist
-                ? ForgeConfigHandler.betterSVGen.betterSVBlacklistedDimensions
+                ? IceAndFireConfig.WORLDGEN.snowVillageBlacklistedDimensions
                 : IceAndFireForksUtil.EMPTY_ARRAY;
     }
 
