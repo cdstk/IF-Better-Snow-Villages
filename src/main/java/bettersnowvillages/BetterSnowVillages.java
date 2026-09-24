@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
         version = BetterSnowVillages.VERSION,
         name = BetterSnowVillages.NAME,
         dependencies =
-                "required-after:fermiumbooter@[1.5.2,);" +
+                "required-after:fermiumbooter@[1.3.0,);" +
                 "required-after:iceandfire;"
 )
 public class BetterSnowVillages {

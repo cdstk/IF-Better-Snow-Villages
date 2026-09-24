@@ -54,7 +54,7 @@ public class ComponentSnowVillageWaystone extends SnowVillagePieces.Village {
             this.boundingBox.offset(0, averageGroundLvl - this.boundingBox.minY, 0);
         }
 
-        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox)) {
+        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox, structureBoundingBoxIn)) {
             return true;
         }
 

@@ -1,12 +1,13 @@
 package bettersnowvillages.world.gen.structure;
 
+import bettersnowvillages.BetterSnowVillages;
 import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.mixin.vanilla.StructureComponent_AccessorMixin;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -16,14 +17,12 @@ import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.gen.structure.template.Template;
 import net.minecraft.world.gen.structure.template.TemplateManager;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
 public class VillageNBTComponent extends StructureVillagePieces.Village {
 
-    public final ResourceLocation resourceLocation;
-    public final VillageNBTPieceWeight nbtPieceWeight;
+    private VillageNBTPieceWeight nbtPieceWeight = null;
 
     public static void alignBoundingBox(VillageNBTPieceWeight nbtPieceWeight, StructureBoundingBox boundingBox, EnumFacing facing) {
         int xOffset = 0;
@@ -59,22 +58,51 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
         );
     }
 
-    public VillageNBTComponent(@Nonnull ResourceLocation resourceLocation, VillageNBTPieceWeight nbtPieceWeight, StructureVillagePieces.Start start, int type, StructureBoundingBox structureBBIn, EnumFacing facing) {
+    // DO NOT USE, prevents java.lang.InstantiationException
+    public VillageNBTComponent() {
+        super();
+    }
+
+    // DO NOT USE, prevents java.lang.InstantiationException
+    protected VillageNBTComponent(StructureVillagePieces.Start start, int type) {
+        super(start, type);
+    }
+
+    public VillageNBTComponent(VillageNBTPieceWeight nbtPieceWeight, StructureVillagePieces.Start start, int type, StructureBoundingBox structureBBIn, EnumFacing facing) {
         super(start, type);
         setCoordBaseMode(Rotation.CLOCKWISE_180.rotate(facing));
-        this.resourceLocation = resourceLocation;
         this.nbtPieceWeight = nbtPieceWeight;
 
         this.boundingBox = structureBBIn;
     }
 
     @Override
+    protected void writeStructureToNBT(NBTTagCompound tagCompound) {
+        super.writeStructureToNBT(tagCompound);
+        if(this.nbtPieceWeight != null) {
+            this.nbtPieceWeight.writeToNBT(tagCompound);
+        }
+    }
+
+    @Override
+    protected void readStructureFromNBT(NBTTagCompound tagCompound, TemplateManager templateManager) {
+        super.readStructureFromNBT(tagCompound, templateManager);
+        this.nbtPieceWeight = VillageNBTPieceWeight.recreateFromNBT(tagCompound);
+    }
+
+    @Override
     protected int getAverageGroundLevel(World worldIn, StructureBoundingBox structurebb) {
-        return super.getAverageGroundLevel(worldIn, structurebb) + this.nbtPieceWeight.yOffset;
+        int yOffset = this.nbtPieceWeight != null ? this.nbtPieceWeight.yOffset : 0;
+        return super.getAverageGroundLevel(worldIn, structurebb) + yOffset;
     }
 
     @Override
     public boolean addComponentParts(World world, Random random, StructureBoundingBox villageBB) {
+        if(this.nbtPieceWeight == null) {
+            BetterSnowVillages.LOGGER.warn("Tried to generate a NBT Village Component without a template at: /tp @s {} {} {}", this.boundingBox.maxX, this.boundingBox.minY, this.boundingBox.minZ);
+            return true;
+        }
+
         if (averageGroundLvl < 0) {
             averageGroundLvl = getAverageGroundLevel(world, villageBB);
             if (averageGroundLvl < 0) {
@@ -84,7 +112,7 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
             this.boundingBox.offset(0, averageGroundLvl - this.boundingBox.minY, 0);
         }
 
-        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox)) {
+        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox, villageBB)) {
             return true;
         }
 
@@ -100,7 +128,7 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
             placeSettings.setMirror(faceSettings.betterSnowVillages$accessorMirror());
         }
 
-        Template template = templateManager.getTemplate(world.getMinecraftServer(), this.resourceLocation);
+        Template template = templateManager.getTemplate(world.getMinecraftServer(), this.nbtPieceWeight.resourceLocation);
         template.addBlocksToWorld(world, templatePosition, placeSettings, 2);
 
         for (int zz = 0; zz < this.boundingBox.getZSize(); ++zz) {
@@ -114,8 +142,8 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
 
                 this.clearCurrentPositionBlocksUpwards(world, relativePos.getX(), this.boundingBox.getYSize() + 1, relativePos.getZ(), villageBB);
 
-                IBlockState targetBlock = world.getBlockState(targetPos);
-                IBlockState supportBlock = this.getAquaticSupportBlock(world, targetPos);
+                IBlockState targetBlock = this.getBlockStateFromPos(world, targetPos.getX(), targetPos.getY(), targetPos.getZ(), villageBB);
+                IBlockState supportBlock = this.getAquaticSupportBlock(world, targetPos, villageBB);
                 // Over Water
                 if(supportBlock != null) {
                     int count;
@@ -134,14 +162,14 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
                 }
                 // Over Ground
                 else {
-                    supportBlock = this.getGroundSupportBlock(world, targetPos);
+                    supportBlock = this.getGroundSupportBlock(world, targetPos, villageBB);
                     if(supportBlock != null) {
                         this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), -1, relativePos.getZ(), villageBB);
                     }
                 }
 
                 // Some structures have water at y0
-                if(targetBlock.getMaterial().isLiquid() && !world.getBlockState(targetPos.down()).getMaterial().isLiquid()) {
+                if(targetBlock.getMaterial().isLiquid() && !this.getBlockStateFromPos(world, targetPos.getX(), targetPos.getY() - 1, targetPos.getZ(), villageBB).getMaterial().isLiquid()) {
                     this.setBlockState(world, Blocks.ICE.getDefaultState(), relativePos.getX(),  -1, relativePos.getZ(), villageBB);
                 }
             }
@@ -151,9 +179,11 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
     }
 
     @Nullable
-    public IBlockState getAquaticSupportBlock(World world, BlockPos blockPos) {
-        if(world.getBlockState(blockPos.down()).getMaterial().isLiquid()) {
-            Material material = world.getBlockState(blockPos).getMaterial();
+    public IBlockState getAquaticSupportBlock(World world, BlockPos blockPos, StructureBoundingBox villageBB) {
+        IBlockState belowBlock = this.getBlockStateFromPos(world, blockPos.getX(), blockPos.getY() - 1, blockPos.getZ(), villageBB);
+        if(belowBlock.getMaterial().isLiquid()) {
+            IBlockState targetBlock = this.getBlockStateFromPos(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), villageBB);
+            Material material = targetBlock.getMaterial();
 
             if (material.equals(Material.WOOD)) {
                 return Blocks.PLANKS.getDefaultState();
@@ -171,8 +201,9 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
     }
 
     @Nullable
-    public IBlockState getGroundSupportBlock(World world, BlockPos blockPos) {
-        Material material = world.getBlockState(blockPos).getMaterial();
+    public IBlockState getGroundSupportBlock(World world, BlockPos blockPos, StructureBoundingBox villageBB) {
+        IBlockState targetBlock = this.getBlockStateFromPos(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), villageBB);
+        Material material = targetBlock.getMaterial();
 
         if (material.equals(Material.ROCK)) {
             return IceAndFireForksUtil.getFrozenCobblestone().getDefaultState();

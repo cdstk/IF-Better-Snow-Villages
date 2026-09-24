@@ -39,11 +39,26 @@ public class IceAndFireForksUtil {
         return new EntityZombieVillager(world);
     }
 
-    public static boolean isStructureInsideMausoleum(World world, StructureBoundingBox boundingBox) {
+    public static boolean isStructureInsideMausoleum(World world, StructureBoundingBox structureBB) {
         if(getMausoleumAntiGrief()) {
-            for(int x : new int[]{ boundingBox.minX, boundingBox.maxX }) {
-                for(int z : new int[]{ boundingBox.minZ, boundingBox.maxZ }) {
-                    for(int y : new int[]{ boundingBox.minY, boundingBox.maxY }) {
+            for(int x : new int[]{ structureBB.minX, structureBB.maxX }) {
+                for(int z : new int[]{ structureBB.minZ, structureBB.maxZ }) {
+                    for(int y : new int[]{ structureBB.minY, structureBB.maxY }) {
+                        if(IceAndFireForksUtil.isBlockInsideMausoleum(world, new BlockPos(x, y, z))) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean isStructureInsideMausoleum(World world, StructureBoundingBox structureBB, StructureBoundingBox villageBB) {
+        if(getMausoleumAntiGrief()) {
+            for(int x : new int[]{ Math.max(structureBB.minX, villageBB.minX), Math.min(structureBB.maxX, villageBB.maxX) }) {
+                for(int z : new int[]{ Math.max(structureBB.minZ, villageBB.minZ), Math.min(structureBB.maxZ, villageBB.maxZ) }) {
+                    for(int y : new int[]{ Math.max(structureBB.minY, villageBB.minY), Math.min(structureBB.maxY, villageBB.maxZ) }) {
                         if(IceAndFireForksUtil.isBlockInsideMausoleum(world, new BlockPos(x, y, z))) {
                             return true;
                         }

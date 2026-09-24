@@ -78,7 +78,7 @@ public class ComponentSnowVillageBountyBoard extends SnowVillagePieces.Village {
             this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.minY - 1, 0);
         }
 
-        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox)) {
+        if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox, structureBoundingBoxIn)) {
             return true;
         }
 
