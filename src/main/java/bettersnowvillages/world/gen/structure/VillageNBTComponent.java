@@ -103,13 +103,13 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
             return true;
         }
 
-        if (averageGroundLvl < 0) {
-            averageGroundLvl = getAverageGroundLevel(world, villageBB);
-            if (averageGroundLvl < 0) {
+        if (this.averageGroundLvl < 0) {
+            this.averageGroundLvl = getAverageGroundLevel(world, villageBB);
+            if (this.averageGroundLvl < 0) {
                 return true;
             }
 
-            this.boundingBox.offset(0, averageGroundLvl - this.boundingBox.minY, 0);
+            this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.minY, 0);
         }
 
         if(IceAndFireForksUtil.isStructureInsideMausoleum(world, this.boundingBox, villageBB)) {
@@ -134,43 +134,38 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
         for (int zz = 0; zz < this.boundingBox.getZSize(); ++zz) {
             for (int xx = 0; xx < this.boundingBox.getXSize(); ++xx) {
                 BlockPos relativePos = Template.transformedBlockPos(placeSettings, new BlockPos(xx, 0, zz));
-                BlockPos targetPos = new BlockPos(
-                        this.getXWithOffset(relativePos.getX(), relativePos.getZ()),
-                        this.getYWithOffset(relativePos.getY()),
-                        this.getZWithOffset(relativePos.getX(), relativePos.getZ())
-                );
 
-                this.clearCurrentPositionBlocksUpwards(world, relativePos.getX(), this.boundingBox.getYSize() + 1, relativePos.getZ(), villageBB);
+                this.clearCurrentPositionBlocksUpwards(world, relativePos.getX(), this.boundingBox.getYSize() + relativePos.getY() + 1, relativePos.getZ(), villageBB);
 
-                IBlockState targetBlock = this.getBlockStateFromPos(world, targetPos.getX(), targetPos.getY(), targetPos.getZ(), villageBB);
-                IBlockState supportBlock = this.getAquaticSupportBlock(world, targetPos, villageBB);
+                IBlockState targetBlock = this.getBlockStateFromPos(world, relativePos.getX(), relativePos.getY(), relativePos.getZ(), villageBB);
+                IBlockState supportBlock = this.getAquaticSupportBlock(world, relativePos.getX(), relativePos.getY(), relativePos.getZ(), villageBB);
                 // Over Water
                 if(supportBlock != null) {
                     int count;
                     if(supportBlock.getMaterial().equals(Material.ICE) || supportBlock.getMaterial().equals(Material.PACKED_ICE)) {
                         count = this.boundingBox.getYSize() / 2;
-                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), -1, relativePos.getZ(), villageBB, count);
+                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), relativePos.getY() - 1, relativePos.getZ(), villageBB, count);
                     }
                     else if(supportBlock.getMaterial().equals(Material.SNOW) || supportBlock.getMaterial().equals(Material.CRAFTED_SNOW)) {
                         count = this.boundingBox.getYSize() / 4;
-                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), -1, relativePos.getZ(), villageBB, count);
+                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), relativePos.getY() - 1, relativePos.getZ(), villageBB, count);
                     }
                     else {
                         count = this.boundingBox.getYSize() / 3;
-                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), -1, relativePos.getZ(), villageBB, count);
+                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), relativePos.getY() - 1, relativePos.getZ(), villageBB, count);
                     }
                 }
                 // Over Ground
                 else {
-                    supportBlock = this.getGroundSupportBlock(world, targetPos, villageBB);
+                    supportBlock = this.getGroundSupportBlock(world, relativePos.getX(), relativePos.getY(), relativePos.getZ(), villageBB);
                     if(supportBlock != null) {
-                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), -1, relativePos.getZ(), villageBB);
+                        this.replaceAirAndLiquidDownwards(world, supportBlock, relativePos.getX(), relativePos.getY() - 1, relativePos.getZ(), villageBB);
                     }
                 }
 
                 // Some structures have water at y0
-                if(targetBlock.getMaterial().isLiquid() && !this.getBlockStateFromPos(world, targetPos.getX(), targetPos.getY() - 1, targetPos.getZ(), villageBB).getMaterial().isLiquid()) {
-                    this.setBlockState(world, Blocks.ICE.getDefaultState(), relativePos.getX(),  -1, relativePos.getZ(), villageBB);
+                if(targetBlock.getMaterial().isLiquid() && !this.getBlockStateFromPos(world, relativePos.getX(), relativePos.getY() - 1, relativePos.getZ(), villageBB).getMaterial().isLiquid()) {
+                    this.setBlockState(world, Blocks.ICE.getDefaultState(), relativePos.getX(),  relativePos.getY() - 1, relativePos.getZ(), villageBB);
                 }
             }
         }
@@ -179,10 +174,10 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
     }
 
     @Nullable
-    public IBlockState getAquaticSupportBlock(World world, BlockPos blockPos, StructureBoundingBox villageBB) {
-        IBlockState belowBlock = this.getBlockStateFromPos(world, blockPos.getX(), blockPos.getY() - 1, blockPos.getZ(), villageBB);
+    public IBlockState getAquaticSupportBlock(World world, int x, int y, int z, StructureBoundingBox villageBB) {
+        IBlockState belowBlock = this.getBlockStateFromPos(world, x, y - 1, z, villageBB);
         if(belowBlock.getMaterial().isLiquid()) {
-            IBlockState targetBlock = this.getBlockStateFromPos(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), villageBB);
+            IBlockState targetBlock = this.getBlockStateFromPos(world, x, y, z, villageBB);
             Material material = targetBlock.getMaterial();
 
             if (material.equals(Material.WOOD)) {
@@ -201,8 +196,8 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
     }
 
     @Nullable
-    public IBlockState getGroundSupportBlock(World world, BlockPos blockPos, StructureBoundingBox villageBB) {
-        IBlockState targetBlock = this.getBlockStateFromPos(world, blockPos.getX(), blockPos.getY(), blockPos.getZ(), villageBB);
+    public IBlockState getGroundSupportBlock(World world, int x, int y, int z, StructureBoundingBox villageBB) {
+        IBlockState targetBlock = this.getBlockStateFromPos(world, x, y, z, villageBB);
         Material material = targetBlock.getMaterial();
 
         if (material.equals(Material.ROCK)) {
@@ -213,11 +208,7 @@ public class VillageNBTComponent extends StructureVillagePieces.Village {
             return Blocks.PACKED_ICE.getDefaultState();
         }
 
-        if (material.equals(Material.GROUND) || material.equals(Material.GRASS)) {
-            return Blocks.DIRT.getDefaultState();
-        }
-
-        return null;
+        return material.isSolid() ? Blocks.DIRT.getDefaultState() : null;
     }
 
     public void replaceAirAndLiquidDownwards(World worldIn, IBlockState blockstateIn, int x, int y, int z, StructureBoundingBox boundingboxIn, int replaceCount) {
