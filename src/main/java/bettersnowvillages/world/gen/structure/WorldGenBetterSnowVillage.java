@@ -4,6 +4,7 @@ import bettersnowvillages.compat.AAAMUtil;
 import bettersnowvillages.compat.IceAndFireForksUtil;
 import bettersnowvillages.compat.ModLoadedUtil;
 import bettersnowvillages.config.ForgeConfigHandler;
+import bettersnowvillages.world.gen.BetterSnowVillagesChunkGenerator;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -34,7 +35,7 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
         MapGenBetterSnowVillage.Start start = new MapGenBetterSnowVillage.Start(worldIn, rand, chunkX, chunkZ, 0);
 
         if(ModLoadedUtil.AAAM.isLoaded()) {
-            AAAMUtil.autoMarkStructureStart(start, worldIn);
+            AAAMUtil.markBetterSnowVillage(start, worldIn, BetterSnowVillagesChunkGenerator.BETTER_SNOW_VILLAGE.getStructureName());
         }
 
         StructureBoundingBox boundingBox = start.getBoundingBox();

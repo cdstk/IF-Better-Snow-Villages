@@ -247,7 +247,7 @@ public class ForgeConfigHandler {
 	@MixinConfig(name = BetterSnowVillages.MODID)
 	public static class BaseSnowVillageGenConfig {
 
-		@Config.Comment("Fixes Ice and Fire never generating auto markers despite \"SnowVillageStart\" having a configurable structure marker.")
+		@Config.Comment("Auto marks Normal Snow Villages since they don't get marked despite \"SnowVillageStart\" having a configurable structure marker.")
 		@Config.Name("Mod Compat: Antique Auto Atlas Marker")
 		@MixinConfig.MixinToggle(lateMixin = "mixins.bettersnowvillages.iceandfire.aaam.json", defaultValue = true)
 		@MixinConfig.CompatHandling(
@@ -258,6 +258,21 @@ public class ForgeConfigHandler {
 		)
 		@Config.RequiresMcRestart
 		public boolean baseAAAM = true;
+
+		@Config.Comment({
+				"AAAM Auto Mark Setting, make empty to disable.",
+				"\tFormat: [markerType ; label]"
+		})
+		@Config.Name("AAAM - Normal Snow Village")
+		public String aaamNormal = "antiqueatlas:village;Normal Snow Village";
+
+		@Config.Comment({
+				"AAAM Auto Mark Setting, make empty to disable.",
+				"\tFormat: [markerType ; label]",
+				"Only used with WorldGenerator"
+		})
+		@Config.Name("AAAM - Better Snow Village")
+		public String aaamBSV = "antiqueatlas:village;Better Snow Village";
 
 		@Config.Comment("Adds Bountiful mod's Bounty Board to the vanilla Ice and Fire Snow Villages.")
 		@Config.Name("Mod Compat: Bountiful Bounty Board")
