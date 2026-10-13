@@ -54,7 +54,7 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
         if(!MapGenBetterSnowVillage.isVillageGenAllowedInDim(worldIn.provider.getDimension()))
             return false;
 
-        if(worldIn.getBiomeProvider().areBiomesViable(position.getX(), position.getZ(), 0, MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES)) {
+        if(worldIn.getBiomeProvider().areBiomesViable(position.getX(), position.getZ(), ForgeConfigHandler.betterSVGen.betterSVBiomeRadius, MapGenBetterSnowVillage.SNOW_VILLAGE_SPAWN_BIOMES)) {
             return true;
         }
 

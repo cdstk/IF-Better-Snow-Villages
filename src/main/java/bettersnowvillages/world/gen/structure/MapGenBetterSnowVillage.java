@@ -139,7 +139,7 @@ public class MapGenBetterSnowVillage extends MapGenStructure {
         zDistBetween = zDistBetween + random.nextInt(this.distance - this.minTownSeparation);
 
         if (targetChunkX == xDistBetween && targetChunkZ == zDistBetween) {
-            boolean validBiome = this.world.getBiomeProvider().areBiomesViable(targetChunkX * 16 + 8, targetChunkZ * 16 + 8, 0, SNOW_VILLAGE_SPAWN_BIOMES);
+            boolean validBiome = this.world.getBiomeProvider().areBiomesViable(targetChunkX * 16 + 8, targetChunkZ * 16 + 8, ForgeConfigHandler.betterSVGen.betterSVBiomeRadius, SNOW_VILLAGE_SPAWN_BIOMES);
 
             if (validBiome) {
                 return true;

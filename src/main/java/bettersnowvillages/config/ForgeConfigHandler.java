@@ -112,6 +112,14 @@ public class ForgeConfigHandler {
 		@Config.RangeInt(min = 0)
 		public int betterSVMinDist = 512;
 
+		@Config.Comment({
+				"Radius in blocks around a snow village's center that must also be allowed biomes",
+				"0 only checks the center, same as Ice and Fire"
+		})
+		@Config.Name("Better Snow Village Biome Check Radius")
+		@Config.RangeInt(min = 0)
+		public int betterSVBiomeRadius = 0;
+
 		@Config.Comment("Modifies Bountiful mod's Bounty Board to generate snow and ice variations in cold and snowy tagged biomes.")
 		@Config.Name("Mixin: Snowy Bounty Board (Bountiful)")
 		@MixinConfig.MixinToggle(lateMixin = "mixins.bettersnowvillages.bountiful.json", defaultValue = true)
