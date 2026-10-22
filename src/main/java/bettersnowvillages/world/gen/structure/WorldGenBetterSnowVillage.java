@@ -34,7 +34,7 @@ public class WorldGenBetterSnowVillage extends WorldGenerator {
         int chunkZ = position.getZ() >> 4;
         MapGenBetterSnowVillage.Start start = new MapGenBetterSnowVillage.Start(worldIn, rand, chunkX, chunkZ, 0);
 
-        if(ModLoadedUtil.AAAM.isLoaded()) {
+        if(ModLoadedUtil.AAAM.isLoaded() && AAAMUtil.hasAPI()) {
             AAAMUtil.markBetterSnowVillage(start, worldIn, BetterSnowVillagesChunkGenerator.BETTER_SNOW_VILLAGE.getStructureName());
         }
 

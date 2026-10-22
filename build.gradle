@@ -61,6 +61,7 @@ def optionalRuntime = [
         "curse.maven:ivtoolkit-${ivtoolkit_version}"
 ]
 def optionalImplementation = [
+        "io.github.meldexun:betterconfig:1.12.2-1.3.0",
         "curse.maven:antique-atlas-${antiqueatlas_version}",
         "curse.maven:antiqueatlasautomarker-${aaam_version}",
         "curse.maven:bountiful-${bountiful_version}",

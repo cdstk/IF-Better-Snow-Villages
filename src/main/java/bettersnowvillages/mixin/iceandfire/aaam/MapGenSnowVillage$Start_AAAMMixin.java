@@ -20,6 +20,7 @@ public abstract class MapGenSnowVillage$Start_AAAMMixin extends StructureStart {
             remap = false
     )
     private void betterSnowVillages_iceAndFireMapGenSnowVillage$Start_generateAAAM(World worldIn, Random rand, int x, int z, int size, CallbackInfo ci){
-        AAAMUtil.markNormalSnowVillage(this, worldIn);
+        if(AAAMUtil.hasAPI())
+            AAAMUtil.markNormalSnowVillage(this, worldIn);
     }
 }

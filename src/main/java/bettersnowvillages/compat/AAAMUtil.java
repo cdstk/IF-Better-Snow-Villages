@@ -8,6 +8,10 @@ import net.minecraft.world.gen.structure.StructureStart;
 
 public class AAAMUtil {
 
+    public static boolean hasAPI() {
+        return ModLoadedUtil.versionInRange(ModLoadedUtil.AAAM, "[1.6.0,)");
+    }
+
     public static void markNormalSnowVillage(StructureStart structureStart, World world) {
         String[] config = ForgeConfigHandler.ifSVGen.aaamNormal.split(";");
         if(config[0].trim().isEmpty()) return;
